@@ -1,0 +1,30 @@
+pwd,Print working directory
+ls,List files and directories in current working directory
+cd,Change current working directory
+mkdir,Create a directory
+rmdir,Delete a directory
+rm,Delete a file
+cp,Copy
+mv,Move a file
+ssh,Securely connect to a remote server 
+scp,Securely copy files between hosts
+man,Access manual pages for all Linux commands 
+g++,GNU C++ compiler command 
+gcc,"GNU Compiler Collection, used to compile C programs"
+make,Builds executable programs and libraries from source code
+ps,List active processes 
+kill,Terminate a Linux process under a given ID
+top,See all running processes 
+who,Display who is currently logged into the system 
+chmod,Change file and directory permissions 
+cat,Show the contents of a file 
+alias,Create an alias for a command 
+chown,Change the ownership of a file 
+df,Display information about the disk space usage of file systems 
+grep,Search for a specific pattern in a file 
+echo,Used to display text or variables in the terminal 
+find,Used to search for files and directories within a specific directory hierarchy 
+clear,Clear the terminal screen 
+diff,Compare 2 files and display differences 
+env,Displays or modifies environment variables 
+free,Display free and used memory 
