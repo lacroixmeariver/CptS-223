@@ -10,6 +10,7 @@ using std::ostream;
 
 template <class T>
 class List{
+
 public:
     Node <T>* pHead; 
 
@@ -53,11 +54,8 @@ public:
         return success;
     }
 
-    void printList(void){
-        while(pHead){
-            cout << pHead;
-        }
-    }
+   
+  
 
 
 

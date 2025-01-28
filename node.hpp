@@ -14,10 +14,7 @@ public:
         pNext = newNext;
     }
 
-    friend ostream& operator<<(ostream& lhs, Node<T>& rhs){ // friend so the data can be read
-    lhs << rhs.data << endl;
-    return lhs;
-    }
+  
 };
 
 #endif 

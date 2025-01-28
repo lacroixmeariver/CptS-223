@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 using std::cout;
 using std::cin;
 using namespace std;

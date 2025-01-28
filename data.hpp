@@ -15,6 +15,13 @@ public:
     key = keyCommand;
     value = valueDescription;
     }; 
+
+    friend ostream& operator<<(ostream& lhs, Data rhs){
+        lhs << "Key: " << rhs.key << endl;
+        lhs << "Value: " <<rhs.value << endl;
+        cout << endl;
+        return lhs;
+    }
 };
 
 #endif 

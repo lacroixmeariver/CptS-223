@@ -2,18 +2,17 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: clang++ build active file",
-            "command": "/usr/bin/clang++",
-            "args": [
-                "-fcolor-diagnostics",
-                "-fansi-escape-codes",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+            "label": "Build C++ Project",
+            "command": "g++",
+            "args": [ 
+            "-std=c++11",
+            "main.cpp",
+            "matchGame.cpp",
+            "-o",
+            "main"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"

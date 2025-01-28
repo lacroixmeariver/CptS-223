@@ -2,21 +2,15 @@
 #include "data.hpp"
 #include "node.hpp"
 #include "list.hpp"
+#include "matchGame.hpp"
 
 
 
 int main(void){
+    matchGame testGame;
+    testGame.importQuestions();
+    //testGame.printList();
 
-    Data testData("key value", "description");
-    Data testData2("other key value", "other description");
-    List<Data> testList;
-    testList.insertAtFront(testData);
-    testList.insertAtFront(testData2);
-
-
-
-
-    
 
     return 0; 
 }
