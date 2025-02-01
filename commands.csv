@@ -1,30 +1,30 @@
-pwd,Print working directory
-ls,List files and directories in current working directory
-cd,Change current working directory
-mkdir,Create a directory
-rmdir,Delete a directory
-rm,Delete a file
-cp,Copy
-mv,Move a file
-ssh,Securely connect to a remote server 
-scp,Securely copy files between hosts
-man,Access manual pages for all Linux commands 
-g++,GNU C++ compiler command 
-gcc,"GNU Compiler Collection, used to compile C programs"
-make,Builds executable programs and libraries from source code
-ps,List active processes 
-kill,Terminate a Linux process under a given ID
-top,See all running processes 
-who,Display who is currently logged into the system 
-chmod,Change file and directory permissions 
-cat,Show the contents of a file 
-alias,Create an alias for a command 
-chown,Change the ownership of a file 
-df,Display information about the disk space usage of file systems 
-grep,Search for a specific pattern in a file 
-echo,Used to display text or variables in the terminal 
-find,Used to search for files and directories within a specific directory hierarchy 
-clear,Clear the terminal screen 
-diff,Compare 2 files and display differences 
-env,Displays or modifies environment variables 
-free,Display free and used memory 
+pwd,Prints working directory,1
+ls,Lists files and directories in current working directory,1
+cd,Changes current working directory,1
+mkdir,Creates a directory,2
+rmdir,Deletes a directory,2
+rm,Deletes a file,3
+cp,Copys,2
+mv,Moves a file,2
+ssh,Securely connects to a remote server,5
+scp,Securely copies files between hosts,5
+man,Accesses manual pages for all Linux commands,1
+g++,GNU C++ compiler command,4
+gcc,GNU Compiler Collection - used to compile C programs,4
+make,Builds executable programs and libraries from source code,4
+ps,Lists active processes,4
+kill,Terminates a Linux process under a given ID,4
+top,Displays all running processes,5
+who,Displays who is currently logged into the system,1
+chmod,Changes file and directory permissions,5
+cat,Shows the contents of a file,2
+alias,Creates an alias for a command,2
+chown,Changes the ownership of a file,5
+df,Displays information about the disk space usage of file systems,3
+grep,Searches for a specific pattern in a file,3
+echo,Used to display text or variables in the terminal,1
+find,Used to search for files and directories within a specific directory hierarchy,3
+clear,Clears the terminal screen,1
+diff,Compares 2 files and display differences,3
+env,Displays or modifies environment variables,2
+free,Displays free and used memory,1
