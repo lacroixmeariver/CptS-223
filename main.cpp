@@ -9,10 +9,7 @@
 int main(void){
     srand(time(NULL));
     matchGame testGame;
-    testGame.importQuestions();
     testGame.displayMenu();
-    //testGame.printList();
-    //testGame.askQuestion();
 
 
     return 0; 

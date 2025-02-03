@@ -9,8 +9,8 @@ using std::ifstream;
 using std::ofstream;
 
 
-
 void matchGame::displayMenu(void){
+    importQuestions(); // get the questions from the CSV file loaded and ready to go 
     cout << "Hello!" << "\n" << "Please select"
     " one of the following:\n";
     int choice = -1; 
@@ -28,28 +28,58 @@ void matchGame::displayMenu(void){
         {
         case 1: 
         displayRules();
+        cout << "Press enter... "<< endl;
+        system("read");
+        system("clear");
         break;
 
         case 2:
-        int keepGoing; 
         askName();
         system("clear");
-        cout << "Press any key..."<< endl;
+        cout << "Press enter... "<< endl;
         system("read");
         system("clear");
-        while(askQuestion() == true)
+        cout << "How many questions do you want?" << endl;
+        int numQs;
+        cin >> numQs;
+
+        for(int i = 0; i < numQs; i++)
         {   
             askQuestion();
-        
+            if (askQuestion() == false){
+                break;
+            }
         }
         break;
 
         case 3:
         loadGame();
+        cout << "How many questions do you want?" << endl;
+        int numQs;
+        cin >> numQs;
+
+        for(int i = 0; i < numQs; i++)
+        {   
+            askQuestion();
+            if (askQuestion() == false){
+                break;
+            }
+        }
         break;
 
         case 4: 
         addCommand();
+        break; 
+
+        case 5: 
+        removeCommand();
+        break; 
+
+        case 6:
+        gameList.printList();
+        cout << "Press enter... "<< endl;
+        system("read");
+        system("clear");
         break; 
 
         case 7:
@@ -61,54 +91,42 @@ void matchGame::displayMenu(void){
     
     }while(choice != 7);
 
-   
-   
-   
-
 }
 
 void matchGame::importQuestions(void){
 
     ifstream inputStream("commands.csv");
-    //List<Data> importList;
     int counter = 0;
    
-
-    if (!inputStream){
+    if (!inputStream)
+    {
         cout << "File not opened correctly!" << endl;
     }
-    else {
+    else 
+    {
     string key = "", value = "", points = "";
     int pointValue = 0;
         while(getline(inputStream, key, ',') && getline(inputStream, value, ',') && getline(inputStream, points, '\n')){
-            //cout << "Points output:" << points << endl;
+            if (key == "0"){
+                return; 
+            }
             pointValue = std::stoi(points);
             Data importData(key, value, pointValue);
             gameList.insertAtFront(importData);
             ++counter;
         }
+
     }
     listSize = counter;
     inputStream.close();
 }
 
-void matchGame::printList(void){
-    Node<Data>* tempPointer = gameList.pHead;
-    while(tempPointer != nullptr){
-        //cout << tempPointer->data.key << endl;
-        //cout << tempPointer->data.value << endl;
-        cout << tempPointer->data;
-        tempPointer = tempPointer->pNext;
-    }
 
-}
 
 void matchGame::printCommands(void)
 {
-     Node<Data>* tempPointer = gameList.pHead;
+    Node<Data>* tempPointer = gameList.pHead;
     while(tempPointer != nullptr){
-        //cout << tempPointer->data.key << endl;
-        //cout << tempPointer->data.value << endl;
         cout << tempPointer->data.key << endl;
         tempPointer = tempPointer->pNext;
     }
@@ -160,7 +178,7 @@ bool matchGame::askQuestion(void)
         cout << "#" << i+1 << " " << choices[i] << endl; 
     }
 
-    int answer = 0;
+    int answer = -1;
     cin >> answer;
 
     if (answer == 0){
@@ -173,7 +191,7 @@ bool matchGame::askQuestion(void)
         cout << "Correct!" << endl;
         cout << "Total points for " << playerName << ":" << playerPoints << endl;
         correctAnswers++;
-        cout << correctAnswers<<endl;
+        cout << correctAnswers << endl;
         incorrectAnswers = 0;
         tempNode->data.pointValue += playerPoints; 
         if (correctAnswers >= 3){
@@ -181,7 +199,11 @@ bool matchGame::askQuestion(void)
             playerPoints += (0.25 * tempNode->data.pointValue);
         }
     } 
-    else {
+    else 
+    {   
+        if(playerPoints == 0){
+            return true;
+        }
         playerPoints -= tempNode->data.pointValue;
         cout << "Incorrect! :(" << endl; // am i going to let this go beyond 0?
         cout << "Total points for " << playerName << ":" << playerPoints << endl;
@@ -193,6 +215,10 @@ bool matchGame::askQuestion(void)
             playerPoints -= (0.15 * tempNode->data.pointValue);
         }
     }
+    
+    cout << "Press enter... "<< endl;
+    system("read");
+    system("clear");
     return true;
 }
 
@@ -220,7 +246,7 @@ void matchGame::askName(void)
 void matchGame::saveAndExit(void)
 {
     ofstream outputStream;
-    outputStream.open("gameRecords.csv", std::ios::app);
+    outputStream.open("profiles.csv", std::ios::app); // allows for the file to not be overwritten 
     outputStream << "Player name" << "," << "Points" << endl; 
     outputStream << playerName << "," << playerPoints << endl;
     outputStream.close();
@@ -252,6 +278,7 @@ void matchGame::loadGame(void)
         cout << "Player name: " << name <<  endl;
         cin >> answer;
     }
+    system("clear");
 
 }
 
@@ -274,14 +301,14 @@ void matchGame::addCommand(void)
         gameList.insertAtFront(newEntry); 
     }
     else {
-        char choice;
+        string choice;
         cout << "Duplicate key value found, would you like to see the commands list? [y/n]" << endl;
         cin >> choice;
-        if (choice == 'y' || choice == 'Y'){ //  too lazy to do that to upper stuff here 
+        transform(choice.begin(), choice.end(), choice.begin(), ::tolower);
+        if (choice == "y"){ 
             system("clear");
-            printCommands();
         }
-        else if (choice == 'n' || choice == 'N'){
+        else if (choice == "n"){
             //cout << "back to main menu..." << endl;
             return;
         }
@@ -300,18 +327,32 @@ void matchGame::removeCommand(void)
     cout << "Remove command: " << "\n" << "[1] I know which command I want to delete\n[2] Show me the list of commands" << endl;
     int answer = -1;
     cin >> answer;
+   
     if (answer == 1){
-        string keyToErase;
-        Node<Data>* tempNode = gameList.pHead;
-        cout << "Enter command you'd like to remove: " << endl;
-        cin >> keyToErase;
-        transform(keyToErase.begin(), keyToErase.end(), keyToErase.begin(), ::tolower);
-        while(tempNode->data.key != keyToErase){
-            tempNode = tempNode->pNext;
-        }
+        string target;
+        cout << "What key would you like to remove?" << endl;
+        cin >> target;
+       
+        transform(target.begin(), target.end(), target.begin(), ::tolower);
+
+        Node<Data>* targetNode = gameList.pHead;
+        Node<Data>* prev = nullptr;
         
+        while (targetNode != nullptr && targetNode->data.key != target)
+        {
+            prev = targetNode;
+            targetNode = targetNode->pNext;
+        }
+       
+        if (targetNode == nullptr)
+        {
+            cout << "Target not found" <<  endl;
+            return;
+        }
+        gameList.deleteNode(targetNode);
     }
-    else if(answer == 2){
+    else if(answer == 2)
+    {
         printCommands();
     }
     else {
@@ -319,7 +360,7 @@ void matchGame::removeCommand(void)
         cout << "Remove command: " << "\n" << "[1] I know which command I want to delete\n[2] Show me the list of commands" << endl;
         cin >> answer;
     }
-
+    
 }
 
 #endif

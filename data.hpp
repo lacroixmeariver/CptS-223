@@ -18,13 +18,24 @@ public:
     pointValue = points;
     }; 
 
-    friend ostream& operator<<(ostream& lhs, Data rhs){
+    friend ostream& operator<<(ostream& lhs, Data rhs)
+    {
         lhs << "Key: " << rhs.key << endl;
         lhs << "Value: " <<rhs.value << endl;
         lhs << "Point value: " << rhs.pointValue << endl;
         cout << endl;
         return lhs;
     }
-};
 
+    friend bool operator!=(const Data &lhs, const Data& rhs)
+    {
+        return lhs.key != rhs.key;
+    }
+    friend bool operator==(const Data &lhs, const Data& rhs)
+    {
+        return lhs.key == rhs.key;
+    }
+
+};
+ 
 #endif 

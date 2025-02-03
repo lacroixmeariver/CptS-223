@@ -18,13 +18,13 @@ string playerName;
 int playerPoints; 
 int correctAnswers;
 int incorrectAnswers;
+// bank of distractors
 const string keyBank[30] = {"ls", "cd", "mkdir", "rmdir", "rm", "cp", "mv", "ssh", "scp", "man", 
 "g++", "gcc", "make", "ps", "kill", "top", "who", "chmod", "cat", "alias", "chown", "df"
 , "grep", "echo", "find", "clear", "diff", "env", "free"};
 
 void displayMenu(void);
 void importQuestions(void);
-void printList(void);
 void printCommands(void);
 bool checkDupes(string target);
 bool askQuestion(void);
