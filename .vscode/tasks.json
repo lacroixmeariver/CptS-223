@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build C++ Project",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++11",
+                "-g1",
+                "main.cpp",
+                "listJosephus.cpp",
+                "destination.cpp",
+                "listTestCases.cpp",
+                "vectorTestCases.cpp", 
+                "-o",
+                "a.out"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compiles the C++ project into a.out with debugging enabled."
+        }
+    ]
+}

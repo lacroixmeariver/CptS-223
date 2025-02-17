@@ -25,3 +25,8 @@ void Destination::printDestinationName()
     cout << "Destination: " << name << endl;
 }
 
+ostream& operator<<(ostream& lhs, const Destination& rhs)
+{
+    lhs << "Position: " << rhs.position << ", " << "Destination: " << rhs.name << ", ";
+    return lhs;
+}

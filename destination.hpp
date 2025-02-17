@@ -26,7 +26,7 @@ class Destination
     //misc functions 
     void printPosition();
     void printDestinationName();
-    
+    friend ostream& operator<<(ostream& lhs, const Destination& rhs);
 };
 
 #endif

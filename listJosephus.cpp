@@ -1,8 +1,34 @@
 #include "listJosephus.hpp"
 
+ListMyJosephus::ListMyJosephus(int eliminationInterval, int totalDestinations) : M(eliminationInterval), N(totalDestinations) 
+{
+    ifstream file("destinations.csv");
+    string fileLine;
+    //auto it = destinationList.begin();
+    for (int i = 0; i < N; i++) // change this number when you're done!1
+    {
+        getline(file, fileLine, ';');
+        destinationList.push_back(Destination(i + 1, fileLine)); 
+    }
+    file.close();   
+}
+
+
 ListMyJosephus::~ListMyJosephus()
 {
+    destinationList.clear();
+    eliminationSequence.clear();
+    
+}
 
+Destination& ListMyJosephus::getListHead()
+{
+    return destinationList.front();
+}
+
+list<Destination> &ListMyJosephus::returnEliminated()
+{
+    return eliminationSequence;
 }
 
 void ListMyJosephus::clear()
@@ -20,44 +46,31 @@ bool ListMyJosephus::isEmpty()
     return destinationList.empty();
 }
 
-list<Destination> ListMyJosephus::eliminateDestination()
+void ListMyJosephus::eliminateDestination()
 {
-    int count = 1;
-    auto it = destinationList.begin(); // start at the beginning of the destination list 
-    while(currentSize() > 1)
+    auto it = destinationList.begin();
+    int count  = 1; 
+    while (currentSize() > 1)
     {
-        if (currentSize() == 1) // if the list size gets down to 1 - "base case"
+        if (count % M == 0)
         {
-            return destinationList;  
-        }
-        if (count % M == 0) // stops at every m-th node
-        {
-            if (it != destinationList.end()) 
-            // if the iterator does NOT land on the last node
+            eliminationSequence.push_back(Destination(it->getPosition(), it->getName()));
+            it = destinationList.erase(it); 
+            if (it == destinationList.end())
             {
-                cout << "Node: " << it->getName() << " erased!" << endl;
-                it = destinationList.erase(it); 
-            }
-            else 
-            // if it DOES land on the last node, deletes it and circles back
-            {
-                cout << "Node: " << it->getName() << " erased!" << endl;
-                destinationList.erase(it); 
-                it = destinationList.begin(); 
+                it = destinationList.begin();
             }
         }
-        else 
+        else
         {
-            it++; // moves the iterator forward if not on m-th node  
+            it++;
         }
+
         if (it == destinationList.end())
-        // check to see if the end of the list has been reached, circles back
         {
             it = destinationList.begin();
         }
+
         count++; 
     }
-    cout << "Final destination is: " << destinationList.begin()->getName() << endl;
-    return destinationList;
 }
-

@@ -1,32 +1,34 @@
- #ifndef _LIST_TEST
- #define _LIST_TEST
- #include "listJosephus.hpp"
- #include <fstream>
- using std::ifstream; 
- using std::stringstream; 
+#include "listTestCases.hpp"
 
- void multipleN()
- {
-    srand(time(NULL));
-    int randomNumber = rand() % 25, N = rand() % 1025, index = 0, containerCount = 0;
-    // get <random number> line from commands.csv
-    ifstream inputStream("commands.csv");
-    string chosenLine, value; 
-
-    for (int i = 0; i < randomNumber; i++)
+void ListTest::runSimulation()
+{
+    ofstream programLog("program.log"); 
+    if (programLog.is_open())
     {
-        getline(inputStream, chosenLine);
-        if  (i == randomNumber)
+       
+        for (int N = 1; N < MAX_N; N++)
         {
-           
+            
+            int M = rand () % N + 1; 
+            clock_t k = clock();
+            clock_t start;
+            do start = clock();
+            while (start == k);
+            ListMyJosephus test(M,N);
+            clock_t end = clock(); 
+            double elapsedTime = static_cast<double>(end - start)/CLOCKS_PER_SEC; 
+            cout << "Time: " << elapsedTime << endl; 
+            test.eliminateDestination(); 
+            programLog << "********** Elimination index: **********" << endl; 
+            programLog << "Elapsed time in seconds: " << elapsedTime << "\n"
+            << M << ", Number of values: " << N << ", Final destination: " 
+            << "[" << test.getListHead().getPosition() <<  "]" << ", [" << test.getListHead().getName() << "]" << endl; 
+            programLog << "Elimination sequence:" << endl; 
+            for (auto it = test.returnEliminated().begin(); it != test.returnEliminated().end(); it++)
+            {
+                programLog << "Index eliminated: " << it->getPosition() /*<< ", " << it->getName()*/ << endl;
+            }
         }
-    } // at the end of this the random line has been chosen
-    
-    for (int n = 1; n < 1025; n++)
-    {
-        
-    }   
- }
-
-
- #endif
+    }
+   
+}
