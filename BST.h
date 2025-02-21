@@ -148,12 +148,7 @@ protected:
 	/* Print tree out in level order */
 	/* MA TODO: Implement */
 	void printLevelOrderHelper(Node<T>* root, std::ostream& out) {
-		// out << endl;
-		// out << "printLevelOrderHelper UNIMPLEMENTED AT THIS TIME -- REPLACE!" << endl;
-		// out << " ** Required to use the STL queue class (that's a huge hint)!" << endl;
-		// out << " ** Doing this with a loop will be easier than recursion." << endl;
-		// out << " ** Your code MUST print to 'out' not 'cout' to work - see printInOrder()." << endl;
-
+	
 		queue<Node<T>*> outputQueue; // queue of pointers 
 		if (root == nullptr) // do nothing if it's empty 
 		{

@@ -1,6 +1,31 @@
 #include <iostream>
 #include "BST.h" 
+/*
+Question portion:
+Part A:
+	1. A move constructor is a class function that allows for the transfering of elements/object data from one object to another of the same type - leaves the object
+	that the data is moved from in a state of emptiness/void of values. 
+	2. A move assignment operator overloads an operator to accept data that is stored somewhere in memory (referred to as an rvalue or sometimes a temporary value), 
+	and defines how a certain user defined object's resources are distributed to the intended destination. 
 
+Part B:
+	1. BST::empty() has a worst case time complexity of O(1). Since there isn't iteration or processes to go through, just a simple check at the root of 
+	a tree and a boolean value is returned. 
+
+	2. BST::add() has a worst case time complexity of O(n). Since this is not a self-balancing tree (no balance factor), the worst insertion 
+	(meaning a very unbalanced or degenerate tree) has to travel down n nodes - in which n represents the max height of a tree. 
+
+	3. BST::makeEmpty() has a worst case time complexity of O(n). In post-order traversal, the recurrence relation is 2T(n) = T(n/2) + O(1), and because the entire tree
+	is 2^k nodes in total (at least in a BST), each call down each subtree divides the size by half. When the relation is expanded, it simplifies to O(n) by way of n equaling
+	2^k, it's inverse being k = log_2(n). Since linear functions grow at a faster speed than logarithmic ones do, complexity boils down to O(n).
+
+	4. BST::printLevelOrder() has a worst case time complexity of O(n). Similarly to post-order traversal, each node is only visited once. Most operations done within that 
+	function + it's helpers operate at O(1) (push, pop, etc.), and since we ignore everything but the highest order growth rate, it comes down to O(n).
+
+	5. BST::cloneTree() has a worst case time complexity of O(n). Similar to a couple of BST operations, each node is only visited once, and the collection size is constantly
+	halved every recursive call to the left and right subtrees. All other operations are at O(n), since it's just transfering information over. 
+
+*/
 int main(){
 
 
