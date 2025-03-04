@@ -272,6 +272,11 @@ class avl_map
     // constructor, new root set to nullptr
     avl_map(avl_node<Key, Value>* newRoot = nullptr): mpRoot(newRoot){} 
 
+    ~avl_map()
+    {
+        delete mpRoot; 
+    }
+
     // getter
     avl_node<Key, Value>* getRoot()
     {
@@ -338,7 +343,7 @@ class avl_map
     std::stack<avl_node<Key, Value>*> nodeStack;
     avl_node<Key, Value>* currentNode;
 
-    void nodePush(avl_node<Key, Value>* node) 
+    void nodePush(avl_node<Key, Value>* node) // adding to the stack via leftmost traversal for in-order traversal down the line 
     {
         while (node != nullptr)
         {
@@ -359,19 +364,19 @@ class avl_map
        return !nodeStack.empty();
     }
 
-    avl_node<Key, Value>* next()
+    avl_node<Key, Value>* next() 
     {
         if (!hasNext()) // if there is no next
         {
             return nullptr;
         }
 
-        currentNode = nodeStack.top();
+        currentNode = nodeStack.top(); // processing node 
         nodeStack.pop();
 
         if (currentNode->getRight() != nullptr)
         {
-            nodePush(currentNode->getRight()); // right traversal 
+            nodePush(currentNode->getRight()); // right traversal now 
         }
 
         return currentNode;
@@ -385,14 +390,14 @@ class avl_map
   }
 
 
-  Iterator find(const Key& key) 
+  Iterator find(const Key& key)  
   {
-    avl_node<Key, Value>* currentNode = mpRoot; 
+    avl_node<Key, Value>* currentNode = mpRoot; // starting at the top 
     while (currentNode != nullptr)
     {
         if (key == currentNode->getNodeKey())
         {
-            //cout << "Found!" << endl;
+            //cout << "Found!" << endl; // [debug print]
             return Iterator(currentNode);
         }
         else if (key < currentNode->getNodeKey()) // go down left subtree 
@@ -406,11 +411,11 @@ class avl_map
 
         else // if not left or right or the target value, it's not in there
         {
-            //cout << "Not found!" << endl;
+            //cout << "Not found!" << endl; // [debug print]
             return Iterator(nullptr); // not found 
         }
     }
-    //cout << "Not found!" << endl;
+    //cout << "Not found!" << endl; [debug print]
     return Iterator(nullptr); // not found; 
   }
 

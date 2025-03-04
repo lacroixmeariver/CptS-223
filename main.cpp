@@ -10,7 +10,7 @@ int main()
 {
     srand(time(NULL));
 
-    
+    // running tests
     testingClass test; 
     test.run();
     test.randomValues();
