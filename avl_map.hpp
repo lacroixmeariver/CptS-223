@@ -1,28 +1,15 @@
 #pragma once
 #include "avl_node.hpp"
 #include <queue>
-#include <list>
+using namespace std; 
 
 template <class Key, class Value>
 class avl_map
 {
     private:
     avl_node<Key, Value>* mpRoot; // pointer to a node as the root of the tree 
-    
-    public:
-    avl_map(avl_node<Key, Value>* newRoot = nullptr): mpRoot(newRoot){} // constructor 
 
-    void insert(Key newKeyValue, Value newDataValue)
-    {
-        insertHelper(mpRoot, newKeyValue, newDataValue);
-    }
-
-    avl_node<Key, Value>* getRoot()
-    {
-        return mpRoot; 
-    }
-
-
+    // private version of the insert function, public facing call does not have access to the root 
     avl_node<Key, Value>* insertHelper(avl_node<Key, Value>*& root, Key newKeyValue, Value newDataValue)
     {
         // recursive insert portion, finds available node to insert to
@@ -32,15 +19,15 @@ class avl_map
             return root; 
         }
 
-        if (newKeyValue < root->getNodeKey()) // left subtree 
+        if (newKeyValue < root->getNodeKey()) //  traverses left subtree 
         {
             insertHelper(root->getLeft(), newKeyValue, newDataValue);
         }
-        else if (newKeyValue > root->getNodeKey()) // right subtree
+        else if (newKeyValue > root->getNodeKey()) // traverses right subtree
         {
             insertHelper(root->getRight(), newKeyValue, newDataValue);
         }
-        else // if it's not less or more than it's probably a duplicate 
+        else // if it's not less or more than 
         {
             return root; 
         }
@@ -48,13 +35,158 @@ class avl_map
         // updating the height of the grandparent node 
         root->setHeight(1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))); 
         int balanceFactor = (root == nullptr) ? 0 : nodeHeight(root->getLeft()) - nodeHeight(root->getRight()); // 0 if null ptr, evaluated otherwise 
-        //cout << "Balance factor is: " << balanceFactor << endl;
+        //cout << "Balance factor is: " << balanceFactor << endl; // [debug print]
 
         // balancing cases LL, RR, LR, RL
-        
         if (balanceFactor < -1) // RR and RL cases 
         {
             if (newKeyValue < root->getRight()->getNodeKey() && root->getRight() != nullptr) // RL case 
+            {
+                // right rotation first RL -> RR
+                root->setRight(rightRotation(root->getRight()));
+                // then left 
+                root = leftRotation(root);
+                return root;
+            }
+            else // RR case 
+            {
+                // rotate left 
+                root = leftRotation(root);
+                return root;
+            }
+
+        }
+        else if (balanceFactor > 1) // LL and LR cases 
+        {
+            if (newKeyValue > root->getLeft()->getNodeKey() && root->getLeft() != nullptr) // LR case 
+            {
+                // performing left rotation first so LR -> LL
+                root->setLeft(leftRotation(root->getLeft()));
+                // LL case -> rotate right 
+                root = rightRotation(root); 
+                return root;
+            }
+            else // LL case
+            {
+                // rotating right
+                root = rightRotation(root); 
+                return root;   
+            }
+
+        }
+
+        if (root == mpRoot) // updating the root if that ever needs to happen 
+        {
+            mpRoot = root; 
+        }
+
+        return root; 
+    }
+
+    // rotations, moved these into private, don't think they need to be in the public facing side
+    avl_node<Key, Value>* rightRotation(avl_node<Key, Value>*& root) 
+    {
+        avl_node<Key, Value>* parentNode = root->getLeft(), *childNode = parentNode->getRight();
+        parentNode->setRight(root);
+        root->setLeft(childNode);
+        
+
+        root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
+        parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
+        //root = childNode;
+        if (parentNode == mpRoot)
+        {
+            mpRoot = root; 
+        }
+
+        return parentNode;
+
+    }
+
+    avl_node<Key, Value>* leftRotation(avl_node<Key, Value>*& root) // making this process a separate helper function helps reduce bogged down code 
+    {
+        avl_node<Key, Value>* parentNode = root->getRight(), *childNode = parentNode->getLeft(); // rotating left so parent is the root->right child, child is inner left pointer
+        parentNode->setLeft(root); // parent node's left -> root
+        root->setRight(childNode);
+        
+        root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
+        parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
+        //root = childNode;
+        if (parentNode == mpRoot)
+        {
+            mpRoot = root; 
+        }
+
+    
+        return parentNode;  
+    }
+
+    // private side erase node function 
+    avl_node<Key, Value>* eraseNodeHelper(avl_node<Key, Value>*& root, const Key& key)
+    {
+
+        if (root == nullptr)
+        {
+            return root;
+        }
+
+        if (key < root->getNodeKey()) // left subtree 
+        {
+            eraseNodeHelper(root->getLeft(), key);
+        }
+        if (key > root->getNodeKey()) // right subtree 
+        {
+            eraseNodeHelper(root->getRight(), key);
+        }
+
+
+        if (root->getLeft() == nullptr || root->getRight() == nullptr) // possible leaves 
+        {
+            if (root->getLeft() == nullptr && root->getRight() == nullptr) //leaf node 
+            {
+                delete root; 
+                root = nullptr;
+            }
+            else if (root->getLeft() == nullptr && root->getRight() != nullptr) // if node has right child but not left 
+            {
+                avl_node<Key, Value>* tempNode = root->getRight();
+                *root = *tempNode; // replacing it with it's child 
+                delete tempNode;
+            }
+            else if (root->getRight() == nullptr && root->getLeft() != nullptr) // if node has left child but not right 
+            {
+                avl_node<Key, Value>* tempNode = root->getLeft();
+                *root = *tempNode; // replacing it with it's child 
+                delete tempNode;
+            }
+
+        }
+        else
+        {
+            avl_node<Key, Value>* tempNode = root->getRight(); // node to take over, smallest node in right ST
+            while (tempNode->getLeft() != nullptr) // finding the leftmost node in right ST
+            {
+                tempNode = tempNode->getLeft();
+            }
+            
+            root->setKey(tempNode->getNodeKey());
+            root->setData(tempNode->getData());
+            delete root->getRight(); 
+
+        }
+    
+        if (root == nullptr)
+        {
+            return root;
+        }
+
+        root->setHeight(1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))); 
+        int balanceFactor = (root == nullptr) ? 0 : nodeHeight(root->getLeft()) - nodeHeight(root->getRight());
+
+         
+        if (balanceFactor < -1) // RR and RL cases 
+        {
+            if (key < root->getRight()->getNodeKey() && root->getRight() != nullptr) // RL case 
             {
                 root->setRight(rightRotation(root->getRight()));
                 root = leftRotation(root);
@@ -71,7 +203,7 @@ class avl_map
         }
         else if (balanceFactor > 1) // 
         {
-            if (newKeyValue > root->getLeft()->getNodeKey() && root->getLeft() != nullptr) // LR case 
+            if (key > root->getLeft()->getNodeKey() && root->getLeft() != nullptr) // LR case 
             {
                 // performing left rotation first so LR >> LL
                 root->setLeft(leftRotation(root->getLeft()));
@@ -96,63 +228,7 @@ class avl_map
         }
 
         return root; 
-    }
 
-    avl_node<Key, Value>* leftRotation(avl_node<Key, Value>*& root) // making this process a separate helper function helps reduce bogged down code 
-    {
-        avl_node<Key, Value>* parentNode = root->getRight(), *childNode = parentNode->getLeft(); // rotating left so parent is the root->right child, child is inner left pointer
-        parentNode->setLeft(root); // parent node's left -> root
-        root->setRight(childNode);
-        
-        root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
-        parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
-        //root = childNode;
-        if (parentNode == mpRoot)
-        {
-            mpRoot = root; 
-        }
-
-    
-        return parentNode;  
-    }
-
-    avl_node<Key, Value>* rightRotation(avl_node<Key, Value>*& root) 
-    {
-        avl_node<Key, Value>* parentNode = root->getLeft(), *childNode = parentNode->getRight();
-        parentNode->setRight(root);
-        root->setLeft(childNode);
-        
-
-        root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
-        parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
-        //root = childNode;
-        if (parentNode == mpRoot)
-        {
-            mpRoot = root; 
-        }
-
-        return parentNode;
-
-    }
-
-    void eraseNode(const Key& key)
-    {
-        if (mpRoot == nullptr)
-        {
-            return mpRoot;
-        }
-
-        if (key < mpRoot->getNodeKey()) // left subtree 
-        {
-
-        }
-
-        else 
-    }
-
-    void printTree()
-    {
-        printTreeHelper(mpRoot);
     }
 
     void printTreeHelper(avl_node<Key, Value>* tree)
@@ -190,7 +266,37 @@ class avl_map
          
     }
 
+    // **************************** Public access stuff starts here ****************************
+    public: 
 
+    // constructor, new root set to nullptr
+    avl_map(avl_node<Key, Value>* newRoot = nullptr): mpRoot(newRoot){} 
+
+    // getter
+    avl_node<Key, Value>* getRoot()
+    {
+        return mpRoot; 
+    }
+
+    // some public calls for private functions ***********************
+
+    // public facing insert call, access to the root 
+    void insert(Key newKeyValue, Value newDataValue)  
+    {
+        insertHelper(mpRoot, newKeyValue, newDataValue);
+    }
+
+    void eraseNode(const Key& key)
+    {
+        eraseNodeHelper(mpRoot, key);
+    }
+
+    void printTree()
+    {
+        printTreeHelper(mpRoot);
+    }
+
+    // utility functions ****************************
     int nodeHeight(avl_node<Key, Value>* node)
     {
         if (node == nullptr) 
@@ -201,7 +307,6 @@ class avl_map
         return node->getNodeHeight();
     }
 
-  
     int findMax(int x, int y)
     {
         if (x < y)
@@ -214,8 +319,6 @@ class avl_map
         }
     }
 
-
-    // Subu taught us its RT - LT but this way makes more sense to me 
     int getBalanceFactor(avl_node<Key, Value>* tree)
     {
         if (tree == nullptr)
@@ -226,14 +329,13 @@ class avl_map
         {
             return nodeHeight(tree->getLeft()) - nodeHeight(tree->getRight());  // left subtree - right 
         }
-        
     }   
  
- 
+ // **************************** iterator ****************************
   class Iterator
   {
     private:
-    std::stack<avl_node<Key, Value>*> nodeStack; 
+    std::stack<avl_node<Key, Value>*> nodeStack;
     avl_node<Key, Value>* currentNode;
 
     void nodePush(avl_node<Key, Value>* node) 
@@ -290,7 +392,7 @@ class avl_map
     {
         if (key == currentNode->getNodeKey())
         {
-            cout << "Found!" << endl;
+            //cout << "Found!" << endl;
             return Iterator(currentNode);
         }
         else if (key < currentNode->getNodeKey()) // go down left subtree 
@@ -304,11 +406,11 @@ class avl_map
 
         else // if not left or right or the target value, it's not in there
         {
-            cout << "Not found!" << endl;
+            //cout << "Not found!" << endl;
             return Iterator(nullptr); // not found 
         }
     }
-    cout << "Not found!" << endl;
+    //cout << "Not found!" << endl;
     return Iterator(nullptr); // not found; 
   }
 

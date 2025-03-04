@@ -1,7 +1,7 @@
 #pragma once
 #include "us_cities.hpp"
 
-template <class Key, class Value> // specifying a different kind of class that'll be included in this that is not class T
+template <class Key, class Value> // specifying two types of general classes 
 class avl_node
 {
     private:
@@ -19,13 +19,18 @@ class avl_node
     // destructor
     ~avl_node()
     {
-
+    
     }
 
     // getters 
     Key getNodeKey()
     {
         return key; 
+    }
+
+    Value getData()
+    {
+        return data;
     }
 
     avl_node<Key, Value>*& getLeft() // returning references allows for direct modification 
@@ -42,7 +47,7 @@ class avl_node
         return nodeHeight; 
     }
 
-    // setters 
+    // setters
     void setLeft(avl_node<Key, Value>* newLeft)
     {
         left = newLeft; 
@@ -58,6 +63,15 @@ class avl_node
         nodeHeight = newVal; 
     }
    
+    void setKey(Key newKey)
+    {
+        key = newKey;
+    }
+
+    void setData(Value newValue)
+    {
+        data = newValue;
+    }
 
 
     
