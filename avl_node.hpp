@@ -14,7 +14,7 @@ class avl_node
     public: 
     
     // constructor 
-    avl_node(Key newKey, Value newData): key(newKey), data(newData), nodeHeight(0), left(nullptr), right(nullptr){}; // setting the left and right pointers to nullptr
+    avl_node(Key newKey, Value newData): key(newKey), data(newData), nodeHeight(1), left(nullptr), right(nullptr){}; // setting the left and right pointers to nullptr
 
     // destructor
     ~avl_node()

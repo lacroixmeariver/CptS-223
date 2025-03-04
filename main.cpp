@@ -10,15 +10,7 @@ int main()
     
     testingClass test; 
     test.run();
-   
-   
-    
 
-
-
-
-
- 
     
 
 

@@ -26,10 +26,12 @@ class testingClass
         map<int, us_cities> testMap2; 
 
         list<int> zipList; 
+
+        
     
         ifstream file("uszips.csv"); 
         getline(file, line); 
-        for (int i = 0; i < 35; i++)
+        for (int i = 0; i < 3374; i++)
         {
         getline(file, line, ','); 
         string cleanLine = line.substr(1, line.size() - 2);
@@ -56,15 +58,18 @@ class testingClass
         pop, density, countyFlips, countyName, countyWeights, countyNamesAll, countyFlipsAll, 
         impersice, military, timezone);
 
-        testMap.insertNode(tempCity.getZip(), tempCity); 
-        testMap2.insert({tempCity.getZip(), tempCity});
+        testMap.insert(tempCity.getZip(), tempCity); 
+        ///testMap2.insert({tempCity.getZip(), tempCity});
 
         zipList.push_back(zip); 
         
     }
     file.close();
+    testMap.find(603);
+    testMap.find(2);
 
-   testMap.printTree(testMap.getRoot());
-    
+
+    //testMap.printTree();
     }
+
 };
