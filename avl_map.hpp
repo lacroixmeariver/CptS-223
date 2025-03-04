@@ -10,7 +10,7 @@ class avl_map
     avl_node<Key, Value>* mpRoot; // pointer to a node as the root of the tree 
 
     // private version of the insert function, public facing call does not have access to the root 
-    avl_node<Key, Value>* insertHelper(avl_node<Key, Value>*& root, Key newKeyValue, Value newDataValue)
+    avl_node<Key, Value>* insertHelper(avl_node<Key, Value>*& root, Key newKeyValue, Value newDataValue) // passing by reference retains changes outside of this scope 
     {
         // recursive insert portion, finds available node to insert to
         if (root == nullptr)
@@ -84,26 +84,26 @@ class avl_map
     }
 
     // rotations, moved these into private, don't think they need to be in the public facing side
+    // making these helper functions reduces confusion when handling LR and RL cases 
     avl_node<Key, Value>* rightRotation(avl_node<Key, Value>*& root) 
     {
         avl_node<Key, Value>* parentNode = root->getLeft(), *childNode = parentNode->getRight();
-        parentNode->setRight(root);
-        root->setLeft(childNode);
-        
+        parentNode->setRight(root); // parent's right -> root, this is the node that floats up
+        root->setLeft(childNode); // root's left -> child 
 
+        // re-calculating node heights 
         root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
         parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
-        //root = childNode;
-        if (parentNode == mpRoot)
+
+        if (parentNode == mpRoot) // adjusting if we're handling the actual root 
         {
             mpRoot = root; 
         }
 
         return parentNode;
-
     }
 
-    avl_node<Key, Value>* leftRotation(avl_node<Key, Value>*& root) // making this process a separate helper function helps reduce bogged down code 
+    avl_node<Key, Value>* leftRotation(avl_node<Key, Value>*& root)  
     {
         avl_node<Key, Value>* parentNode = root->getRight(), *childNode = parentNode->getLeft(); // rotating left so parent is the root->right child, child is inner left pointer
         parentNode->setLeft(root); // parent node's left -> root
@@ -111,12 +111,11 @@ class avl_map
         
         root->setHeight((1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))));
         parentNode->setHeight((1 + findMax(nodeHeight(parentNode->getLeft()), nodeHeight(parentNode->getRight()))));
-        //root = childNode;
+
         if (parentNode == mpRoot)
         {
             mpRoot = root; 
         }
-
     
         return parentNode;  
     }
@@ -124,7 +123,6 @@ class avl_map
     // private side erase node function 
     avl_node<Key, Value>* eraseNodeHelper(avl_node<Key, Value>*& root, const Key& key)
     {
-
         if (root == nullptr)
         {
             return root;
@@ -139,10 +137,11 @@ class avl_map
             eraseNodeHelper(root->getRight(), key);
         }
 
+        // node that we want to delete is found at this point,  determining what kind of node it might be
 
         if (root->getLeft() == nullptr || root->getRight() == nullptr) // possible leaves 
         {
-            if (root->getLeft() == nullptr && root->getRight() == nullptr) //leaf node 
+            if (root->getLeft() == nullptr && root->getRight() == nullptr) // leaf node, safe to just get rid of 
             {
                 delete root; 
                 root = nullptr;
@@ -161,7 +160,7 @@ class avl_map
             }
 
         }
-        else
+        else // a node with children on both sides
         {
             avl_node<Key, Value>* tempNode = root->getRight(); // node to take over, smallest node in right ST
             while (tempNode->getLeft() != nullptr) // finding the leftmost node in right ST
@@ -169,8 +168,10 @@ class avl_map
                 tempNode = tempNode->getLeft();
             }
             
+            // handing the information over 
             root->setKey(tempNode->getNodeKey());
             root->setData(tempNode->getData());
+
             delete root->getRight(); 
 
         }
@@ -180,10 +181,12 @@ class avl_map
             return root;
         }
 
+        // updating heights + balance factor 
         root->setHeight(1 + findMax(nodeHeight(root->getLeft()), nodeHeight(root->getRight()))); 
         int balanceFactor = (root == nullptr) ? 0 : nodeHeight(root->getLeft()) - nodeHeight(root->getRight());
 
-         
+
+        // now to do the rotations if need be 
         if (balanceFactor < -1) // RR and RL cases 
         {
             if (key < root->getRight()->getNodeKey() && root->getRight() != nullptr) // RL case 
@@ -194,14 +197,13 @@ class avl_map
             }
             else 
             {
-                // RR case 
                 // rotate left 
                 root = leftRotation(root);
                 return root;
             }
 
         }
-        else if (balanceFactor > 1) // 
+        else if (balanceFactor > 1) // LL and LR
         {
             if (key > root->getLeft()->getNodeKey() && root->getLeft() != nullptr) // LR case 
             {
@@ -213,7 +215,6 @@ class avl_map
             }
             else
             {
-                // LL case 
                 // rotating right
                 root = rightRotation(root); 
                 return root;
@@ -222,7 +223,7 @@ class avl_map
 
         }
 
-        if (root == mpRoot) // updating the root if that ever needs to happen 
+        if (root == mpRoot) 
         {
             mpRoot = root; 
         }
