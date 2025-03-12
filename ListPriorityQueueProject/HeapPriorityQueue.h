@@ -24,7 +24,8 @@ public:
     void enqueue(const string& str, int priority); 
     void printJobs();
 
-    
+    void insertAtBack(PrinterJob newJob);
+    bool isEmpty();
 };
 
 #endif // HEAPPRIORITYQUEUE_H
