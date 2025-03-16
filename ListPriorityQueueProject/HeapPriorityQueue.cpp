@@ -2,7 +2,7 @@
 #include <iostream>
 
 // TODO: Implement the constructor
-HeapPriorityQueue::HeapPriorityQueue(int newSize = 0) {
+HeapPriorityQueue::HeapPriorityQueue(int newSize) {
     // Initialize size to 0
     size = newSize;
 }
@@ -23,27 +23,26 @@ HeapPriorityQueue::HeapPriorityQueue(const HeapPriorityQueue& other) {
 HeapPriorityQueue& HeapPriorityQueue::operator=(const HeapPriorityQueue& other) {
     // Assign heap elements and size properly
     int i = 0;
-    size = other.size; 
+    HeapPriorityQueue tempValue; 
+    tempValue.size = other.size; 
     while(i < other.size)
     {
-        heap[i] = other.heap[i];
-        size = other.size; 
+        tempValue.heap[i] = other.heap[i];
+        //size = other.size; 
         i++;
     }
-   
+   return tempValue;
 }
 
 // TODO: Implement enqueue function
 void HeapPriorityQueue::enqueue(const string& str, int priority) {
     // Insert new PrinterJob(str, priority) while maintaining heap order using percolateUp
     // minimum value is always the root 
-    if (size == 0) // size being zero = empty heap
-    {
-        // insert function?
-        PrinterJob* tempJob = new PrinterJob(str, priority);
-        heap[0] = *tempJob; 
-        return; 
-    }
+  
+    insertAtBack(str, priority);
+
+
+
     bool success = false;
     int i = 0; 
     
@@ -54,34 +53,42 @@ void HeapPriorityQueue::enqueue(const string& str, int priority) {
 // TODO: Implement printJobs function
 void HeapPriorityQueue::printJobs() {
     // Print and remove PrinterJobs from the heap in priority order and using percolateDown as necessary
+    //cout << "This is working" << endl;
+    for (int i = 0; i < size; i++)
+    {
+        cout << "Job: " << heap[i].printString << endl; 
+    }
 }
 
-void HeapPriorityQueue::insertAtBack(PrinterJob newJob)
+void HeapPriorityQueue::insertAtBack(const string& str, int priority)
 {
+    PrinterJob *tempJob = new PrinterJob(str, priority); 
     int i = 0;
     if (isEmpty()) // if the array is empty 
     {
-        heap[0] = newJob;
-        size = newJob.priority;  
+        heap[0] = *tempJob; 
+        size ++;  
         return; 
     }
 
-    while(!isEmpty())
+    while(heap[i].printString != "\0")
     {
-        heap[i];
-        i++;
-    }   // should break the loop when the array has an empty space
-
-    heap[i] = newJob; 
-   if (newJob.priority <= heap[i].priority)
+        i++; 
+    }
+    heap[i] = *tempJob; 
+    //cout << "i - 1 space entered: " << heap[i].printString << endl;
+    size++; 
+   if (priority < heap[i].priority)
    {
         // percolate up
+        percolateUp(i); 
    }
+
 }
 
 bool HeapPriorityQueue::isEmpty()
 {
-    if (heap == nullptr)
+    if (size == 0)
     {
         return true;
     }
@@ -92,6 +99,7 @@ bool HeapPriorityQueue::isEmpty()
 void HeapPriorityQueue::percolateUp(int index) {
     // Maintain heap order when inserting a new PrinterJob
 
+    
     int i = index; 
     while(index <= heap[i - 1].priority) // continue to bubble up while index is lower than the ones before
     {

@@ -24,7 +24,7 @@ public:
     void enqueue(const string& str, int priority); 
     void printJobs();
 
-    void insertAtBack(PrinterJob newJob);
+    void insertAtBack(const string& str, int priority);
     bool isEmpty();
 };
 

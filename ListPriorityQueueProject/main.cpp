@@ -1,5 +1,6 @@
-#include "ListPriorityQueue.h"
-// #include "HeapPriorityQueue.h" // TODO: Uncomment when implementing HeapPriorityQueue
+//#include "ListPriorityQueue.h"
+
+#include "HeapPriorityQueue.h" // TODO: Uncomment when implementing HeapPriorityQueue
 
 #include <iostream>
 #include <sstream>
@@ -7,8 +8,8 @@
 using namespace std;
 
 int main() {
-    ListPriorityQueue queue; // List-based priority queue TODO: comment when HeapPriorityQueue is ready!
-    // HeapPriorityQueue queue; // TODO: Uncomment when HeapPriorityQueue is implemented
+    //ListPriorityQueue queue; // List-based priority queue TODO: comment when HeapPriorityQueue is ready!
+    HeapPriorityQueue queue; // TODO: Uncomment when HeapPriorityQueue is implemented
 
     string input;
 
@@ -19,6 +20,7 @@ int main() {
         getline(cin, input);
 
         if (input == "exit") break;
+        //cout << input << endl;
         if (input == "print") {
             queue.printJobs();
             continue;
