@@ -39,6 +39,7 @@ void HeapPriorityQueue::enqueue(const string& str, int priority) {
     // Insert new PrinterJob(str, priority) while maintaining heap order using percolateUp
     // minimum value is always the root 
   
+
     insertAtBack(str, priority);
 
 
@@ -56,29 +57,31 @@ void HeapPriorityQueue::printJobs() {
     //cout << "This is working" << endl;
     for (int i = 0; i < size; i++)
     {
-        cout << "Job: " << heap[i].printString << endl; 
+        cout << "Job: " << heap[i].printString << " Priority: " << heap[i].priority << endl;
+        
     }
 }
 
 void HeapPriorityQueue::insertAtBack(const string& str, int priority)
 {
     PrinterJob *tempJob = new PrinterJob(str, priority); 
-    int i = 0;
+    int i = 1;
     if (isEmpty()) // if the array is empty 
     {
         heap[0] = *tempJob; 
         size ++;  
+        cout << "Priority of [0]: " << heap[0].priority << endl;
         return; 
     }
 
-    while(heap[i].printString != "\0")
+    while(heap[i].printString != "\0") // finds index available that does not presently have a string 
     {
-        i++; 
+        i++; // increments i to be able to find that index
     }
     heap[i] = *tempJob; 
-    //cout << "i - 1 space entered: " << heap[i].printString << endl;
+    //cout << "Priority of [i]: " << heap[i].priority << endl; // [debug print]
     size++; 
-   if (priority < heap[i].priority)
+   if (heap[i].priority < heap[i - 1].priority)
    {
         // percolate up
         percolateUp(i); 
@@ -95,23 +98,51 @@ bool HeapPriorityQueue::isEmpty()
     return false; 
 }
 
+void HeapPriorityQueue::swap(int x, int y)
+{
+    PrinterJob tempBuffer = heap[x]; 
+    heap[x] = heap[y];
+    heap[y] = tempBuffer; 
+}
+
+int HeapPriorityQueue::getMax()
+{
+    int maxIndex = heap[0].priority;
+    for (int i = 0; i < size; i++)
+    {
+        if (heap[i].priority > maxIndex)
+        {
+            maxIndex = i; 
+        }
+    }
+
+    return maxIndex; 
+}
+
 // TODO: Implement percolateUp function
 void HeapPriorityQueue::percolateUp(int index) {
     // Maintain heap order when inserting a new PrinterJob
 
-    
-    int i = index; 
-    while(index <= heap[i - 1].priority) // continue to bubble up while index is lower than the ones before
+    while (index > 0) 
     {
-        i--; 
-    }    // when this breaks i should equal the index that should be swapped 
-    PrinterJob temp = heap[i]; 
-    heap[i] = heap[index]; // the index being input gets its rightful place 
-    heap[index] = temp; // swap 
+        PrinterJob tempBuffer = heap[index - 1];
+
+        if (heap[index].priority >= tempBuffer.priority) // breaks out of loop
+        {
+            return; 
+        }
+
+        swap(index, index - 1);
+        index = index - 1; 
+    }
 
 }
 
 // TODO: Implement percolateDown function
 void HeapPriorityQueue::percolateDown(int index) {
     // Maintain heap order when removing a PrinterJob
+    PrinterJob tempValue = heap[getMax()]; 
+    heap[0] = tempValue; 
+
+    
 }

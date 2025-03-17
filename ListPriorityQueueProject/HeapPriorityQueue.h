@@ -26,6 +26,8 @@ public:
 
     void insertAtBack(const string& str, int priority);
     bool isEmpty();
+    void swap(int x, int y); // takes indicies and swaps them in the master array
+    int getMax(); 
 };
 
 #endif // HEAPPRIORITYQUEUE_H
