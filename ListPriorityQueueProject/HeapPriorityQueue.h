@@ -23,11 +23,9 @@ public:
 
     void enqueue(const string& str, int priority); 
     void printJobs();
-
-    void insertAtBack(const string& str, int priority);
     bool isEmpty();
-    void swap(int x, int y); // takes indicies and swaps them in the master array
-    int getMax(); 
+    void insert(const string& str, int priority); 
+    void swap(int index, int parentIndex); // takes indicies and swaps them in the master array
 };
 
 #endif // HEAPPRIORITYQUEUE_H
