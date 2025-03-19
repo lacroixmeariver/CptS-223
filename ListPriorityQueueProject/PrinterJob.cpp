@@ -11,6 +11,15 @@ bool PrinterJob::operator<(const PrinterJob& other) const {
     return priority < other.priority; // Lower number means higher priority
 }
 
+bool PrinterJob::operator>(const PrinterJob &other) const
+{
+    return priority > other.priority;
+}
+
 bool PrinterJob::operator<=(const PrinterJob& other) const {
     return priority <= other.priority; // Lower number means higher priority
+}
+
+bool PrinterJob::operator>=(const PrinterJob& other) const {
+    return priority >= other.priority; // Lower number means higher priority
 }

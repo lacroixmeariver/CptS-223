@@ -6,7 +6,7 @@ CXXFLAGS = -Wall -Wextra -std=c++11
 TARGET = priority_queue
 
 # Source files
-SRCS = main.cpp PrinterJob.cpp ListPriorityQueue.cpp
+SRCS = main.cpp PrinterJob.cpp ListPriorityQueue.cpp HeapPriorityQueue.cpp 
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
