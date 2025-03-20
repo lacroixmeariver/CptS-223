@@ -21,10 +21,11 @@ public:
     HeapPriorityQueue(const HeapPriorityQueue& other); // Copy Constructor
     HeapPriorityQueue& operator=(const HeapPriorityQueue& other); // Copy Assignment
 
+    
     void enqueue(const string& str, int priority); 
     void printJobs();
-    bool isEmpty();
-    void insert(const string& str, int priority); 
+    bool isEmpty(); // returns a bool representing empty/not empty state based on size 
+    void insert(const string& str, int priority); // insert at back 
     void swap(int index, int parentIndex); // takes indicies and swaps them in the master array
 };
 

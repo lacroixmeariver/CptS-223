@@ -13,6 +13,7 @@ public:
     PrinterJob();
     PrinterJob(string str, int pri);
     
+    // overloaded the >, <=, >= operators to make sure all comparisons worked equally regardless of the order 
     bool operator<(const PrinterJob& other) const;
     bool operator>(const PrinterJob& other) const;
     bool operator<=(const PrinterJob& other) const;

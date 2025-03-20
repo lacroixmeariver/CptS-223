@@ -4,18 +4,18 @@
 // TODO: Implement the constructor
 HeapPriorityQueue::HeapPriorityQueue(int newSize) {
     // Initialize size to 0
-    size = newSize;
+    size = newSize; // new size set to 0 in .h file 
 }
 
 // TODO: Implement the destructor
 HeapPriorityQueue::~HeapPriorityQueue() {
     // Cleanup if necessary
-    delete heap; 
 }
 
 // TODO: Implement the copy constructor
 HeapPriorityQueue::HeapPriorityQueue(const HeapPriorityQueue& other) {
     // Copy heap elements and size
+    // not a deep copy 
     HeapPriorityQueue* tempValue = new HeapPriorityQueue(other); 
     tempValue->size = size;
 }
@@ -24,14 +24,15 @@ HeapPriorityQueue::HeapPriorityQueue(const HeapPriorityQueue& other) {
 HeapPriorityQueue& HeapPriorityQueue::operator=(const HeapPriorityQueue& other) {
     // Assign heap elements and size properly
     int i = 0;
-    HeapPriorityQueue tempValue; 
-    tempValue.size = other.size; 
+    HeapPriorityQueue* tempValue = new HeapPriorityQueue(other);
+    tempValue->size = other.size; 
+    // while loop to copy over all elements in source array -> destination array
     while(i < other.size)
     {
-        tempValue.heap[i] = other.heap[i]; 
+        tempValue->heap[0] = other.heap[i]; 
         i++;
     }
-   return tempValue;
+   return *tempValue;
 }
 
 // TODO: Implement enqueue function
@@ -45,8 +46,6 @@ void HeapPriorityQueue::enqueue(const string& str, int priority) {
 // TODO: Implement printJobs function
 void HeapPriorityQueue::printJobs() {
     // Print and remove PrinterJobs from the heap in priority order and using percolateDown as necessary
-    //cout << "This is working" << endl;
-    //int i = 0; 
     if (size == 0)
     {
         cout << "Empty queue!" << endl;
@@ -54,18 +53,17 @@ void HeapPriorityQueue::printJobs() {
     }
     while(size > 0)
     {
-        // printing just the root and then percolating goes in priority order 
+        // printing just the root and then percolating goes in priority order after root is removed 
         cout << "\"" << heap[0].printString << "\"" << "(Priority: " << heap[0].priority << ")" << endl;
         percolateDown(0); 
     }
-    cout << "********** End of print queue **********" << endl;
+    cout << "********** End of print queue **********" << endl; // helps see where the queue actually ends 
    return; 
-    
 }
 
 bool HeapPriorityQueue::isEmpty()
 {
-    if (size == 0)
+    if (size == 0) 
     {
         return true;
     }
@@ -82,8 +80,8 @@ void HeapPriorityQueue::insert(const string& str, int priority)
         return;
     }
     size++;
-    int index = size - 1;
-    heap[index] = *tempPJ; 
+    int index = size - 1; // establishing this as a variable name to avoid confusing myself 
+    heap[index] = *tempPJ; // adding the new print job at the end of the array 
     if (*tempPJ < heap[(index - 1) / 2]) // if the node being inserted is smaller than it's parent
     {
         percolateUp(index); // bring up the node that was just inserted
@@ -92,18 +90,15 @@ void HeapPriorityQueue::insert(const string& str, int priority)
 
 void HeapPriorityQueue::swap(int index, int parentIndex)
 {
-    PrinterJob tempBuffer = heap[index]; 
-    heap[index] = heap[parentIndex];
+    PrinterJob tempBuffer = heap[index]; // temporary node to hold variables for the swap
+    heap[index] = heap[parentIndex]; 
     heap[parentIndex] = tempBuffer; 
 }
-
-
 
 // TODO: Implement percolateUp function
 void HeapPriorityQueue::percolateUp(int index) {
     // Maintain heap order when inserting a new PrinterJob
-    while (index > 0 && heap[index] < heap[(index - 1) / 2]) 
-    // while the index is not 0 and the child is smaller than the parent 
+    while (index > 0 && heap[index] < heap[(index - 1) / 2]) // while the index is not 0 and the child is smaller than the parent 
    {
         swap(index, (index - 1) / 2);  // helper function that swaps the child and parent indices 
         index = ((index - 1) / 2); // moves the index up to the next parent 
@@ -115,7 +110,7 @@ void HeapPriorityQueue::percolateDown(int index) {
     // Maintain heap order when removing a PrinterJob
     // remove the largest index and replace the root with it 
     heap[index] = heap[size - 1];
-    size--;
+    size--; // removed the last index, adjust the size of the tree accordingly
     
     while(index * 2 + 1 < size) // while the left child exists 
     {
@@ -124,15 +119,14 @@ void HeapPriorityQueue::percolateDown(int index) {
         int rightChildIndex = index * 2 + 2; 
         if (rightChildIndex < size && heap[rightChildIndex] < heap[leftChildIndex]) // if right child exists and is less than left child 
         {
-            smallerIndex = rightChildIndex;
+            smallerIndex = rightChildIndex; // setting the smaller index as the right child, to be swapped with parent below 
         }
-        if (heap[index] <= heap[smallerIndex]) 
+        if (heap[index] <= heap[smallerIndex]) // if the child is in it's rightful spot 
         {
             return; 
         }
 
-        swap(smallerIndex, index);  
-        index = smallerIndex; 
+        swap(smallerIndex, index);  // swapping the parent with the smaller of the two children 
+        index = smallerIndex; // continuing down 
     }
-  return; 
 }
