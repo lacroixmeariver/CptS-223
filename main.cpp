@@ -6,19 +6,23 @@ using namespace std;
 int main()
 {
 
-    ScratchVector<int> testVector(2);
-    testVector.insertAtBack(1); 
-    testVector.insertAtBack(2); 
+    ScratchVector<string> testVector(2);
+
+    testVector.insertAtBack("First"); 
+    testVector.insertAtBack("Second"); 
     cout << "Inside the first index: " << testVector[0] << endl; 
     cout << "Inside the second index: " << testVector[1] << endl; 
-    testVector.insertAtBack(3);
+    testVector.insertAtBack("Third");
     cout << "Inside the third index: " << testVector[2] << endl; 
+    testVector.deleteAtBack(); 
     cout << "Size: " << testVector.getSize() << endl; 
     testVector.clear();
+    cout << testVector.isEmpty() << endl; 
     cout << "Inside the first index after clear(): " << testVector[0] << endl; 
-    testVector.insertAtBack(5); 
+    testVector.insertAtBack("New entry"); 
     cout << "Inside the first index after clear() + insert: " << testVector[0] << endl; 
     cout << "Size: " << testVector.getSize() << endl;
+
 
 
 
