@@ -4,12 +4,12 @@
 using namespace std; 
 
 template <class T>
-class ScratchVector
+class Vector_
 {
     private:
-    int capacity;
-    int size;
-    T* data; 
+    int capacity; // total amount this vector can hold 
+    int size; // the number of elements present 
+    T* data; // pointer to the first block of contiguous memory 
 
     // resizing function returns the address to the new vector
     T* resizeVector()
@@ -20,7 +20,7 @@ class ScratchVector
         try
         {
             //cout << "Resizing..." << endl; // debug print
-            int newCapacity = capacity * 2; 
+            int newCapacity = capacity * 2 + 1; 
             T* tempContainer = new T[newCapacity];
             for (int i = 0; i < capacity; i++)
             {
@@ -44,25 +44,33 @@ class ScratchVector
     public:
 
     //constructor
-    ScratchVector(int cap) : capacity(cap) 
+    Vector_(int cap) : capacity(cap) 
     {
         size = 0;
         data = new T[capacity]; // allocating space for T objects 
         // only allocating enough memory for the capacity upon creation
     }
-
-    ~ScratchVector()
+    Vector_()
     {
-        cout << "Inside destructor for vector!" << endl; // debug print
-        delete[] data; // subscript operator in this case makes sure destructor is called for every T object 
+        capacity = 11; 
+        size = 0;
+        data = new T[capacity];
     }
 
-    void insertAtBack(T newData)
+    ~Vector_()
     {
-        if (size == 0) // empty vector 
+        cout << "Inside destructor for vector!" << endl; // debug print
+        //delete[] data; // subscript operator in this case makes sure destructor is called for every T object 
+    }
+
+    void insertAtBack(T& newData)
+    { 
+        if (isEmpty()) // empty vector 
         {
+            
             size++; 
-            data[0] = newData; 
+            data[0] = newData;
+            cout << "First element inserted" << endl;
             return; 
         }
 
@@ -85,6 +93,7 @@ class ScratchVector
         if (isEmpty())
         {
             cout << "Vector is empty, nothing to delete!" << endl;
+            return; 
         } 
         size--; 
     }
@@ -100,7 +109,8 @@ class ScratchVector
         cout << "Clearing data... " << endl; // debug print 
         size = 0; 
         delete[] data; 
-        return new T[capacity]; 
+        data = new T[capacity]; 
+        return data;
     
     }
     
@@ -117,13 +127,15 @@ class ScratchVector
 
     T* begin()
     {
-        return data[0];
+        return *data[0];
     }
 
     T* end()
     {
-        return data[size - 1]; 
+        return *data[size - 1]; 
     }
+
+    
 
 };
 
