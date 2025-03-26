@@ -7,7 +7,7 @@ using namespace std;
 
 class Product
 {
-    private: 
+    public: 
     string uniqueID;
     string productName; 
     string brandName;
@@ -37,7 +37,6 @@ class Product
     string qVariant; 
     string productDescription;
 
-    public:
     // constructor
     Product(string id = "", string name = "", string brand = "", string asinNum = "", string cat = "",
     string upc = "", string priceList = "", string priceSell = "", string quant = "", string modNum = "", 
@@ -52,9 +51,9 @@ class Product
     qVariant(quanVar), productDescription(descProd) {};
 
     // destructor
-    ~Product();
+    ~Product(){};
 
-    
+
 
 
 

@@ -3,6 +3,15 @@
 #define _SCRATCH_VECTOR_
 using namespace std; 
 
+/*        !!TODO!!
+
+- still need copy assignment assignment operator and copy contructor 
+- double check cppreference for any functions that might be integral to this 
+- does this even work idk
+
+*/
+
+
 template <class T>
 class Vector_
 {
@@ -59,7 +68,7 @@ class Vector_
 
     ~Vector_()
     {
-        cout << "Inside destructor for vector!" << endl; // debug print
+        //cout << "Inside destructor for vector!" << endl; // debug print
         //delete[] data; // subscript operator in this case makes sure destructor is called for every T object 
     }
 
@@ -70,7 +79,7 @@ class Vector_
             
             size++; 
             data[0] = newData;
-            cout << "First element inserted" << endl;
+            //cout << "First element inserted" << endl;
             return; 
         }
 
@@ -80,7 +89,7 @@ class Vector_
             size++; 
             return; 
         }
-        else if (size == capacity)
+        else if (size > capacity * .8) // once it's 80% full 
         {
             resizeVector();
             insertAtBack(newData); 
