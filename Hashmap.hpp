@@ -2,62 +2,80 @@
 #define _HASHMAP_
 
 #include <iostream>
-#include "Vector_.hpp"
+#include "Array.hpp"
 #include "List_.hpp"
 using namespace std; 
+
+/*        !!TODO!!
+
+- still need copy assignment assignment operator and copy contructor 
+- double check cppreference for any functions that might be integral to this 
+- need rehashing function
+    -- all elements of the hashmap are iterated and their new bucket positions are calculated 
+    using the new hash function that corresponds to the new size of the hashmap 
+    
+
+*/
 
 template<class K, class T>
 class Hashmap
 {
-    private:
-    struct Pair
-    {
-        K key;
-        T value; 
-        Pair(K newKey, T newValue) : key(newKey), value(newValue) {}; 
+   protected:
 
-        // so Pairs can print 
-       friend ostream& operator<<(ostream& lhs, const Pair& rhs) 
-       {
-            lhs << "{" << rhs.key << ", " << rhs.value << "}";
-            return lhs;
-        }
+   struct Node
+   {
+        K nodeKey; 
+        T nodeData; 
+        Node* mpNext; 
+        Node(K newKey, T newData) : nodeKey(newKey), nodeData(newData){};
+        Node(){};
+   };
+
+   int capacity;
+   int size; 
+   //int loadFactor; 
+   Array<Node*> mapContainer; // array of nodes
+   
+   public:
+
+   Hashmap(int cap) : capacity(cap), mapContainer(cap)
+   {   
+       
+   } 
+
+   //Hashmap(): mapContainer(nullptr){}
+
+   // destructor
+   ~Hashmap()
+   {
+        cout << "Map destructor called!" << endl; 
+   }
+
+   size_t hashFunction(K keyVal)
+   {
         
-    }; 
+        return hash<K>()(keyVal) % capacity; 
+   }
 
-    Vector_< List<Pair>* > mMap; 
-    int capacity;
-    int size; 
 
-    public:
 
-    // constructor 
-    Hashmap(int cap) : capacity(cap)
-    {
-        size = 0; 
-        for (int i = 0; i < capacity; i++)
-        {
-            List<Pair>* newList = new List<Pair>(); 
-            mMap.insertAtBack(newList);
-        }
-         
-    }
 
-    // destructor 
-    ~Hashmap(){}; 
+ 
 
-    void insert(K keyVal, T data)
-    {
-        size_t index = hash<K>()(keyVal) % mMap.getSize(); 
-        cout << "Index: " << index << endl; 
-        mMap[index]->insertFront(Pair(keyVal, data)); 
-    }
+   double loadFactor()
+   {
+        return (static_cast<double>(size)/capacity);   
+   }
+   
+   
 
-    void printIndexList(K keyVal)
-    {
-        size_t index = hash<K>()(keyVal) % mMap.getSize();
-        mMap[index]->printList(); 
-    }
+   
+
+
+
+
+
+
 
 
     

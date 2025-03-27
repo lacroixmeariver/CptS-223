@@ -26,7 +26,7 @@ using namespace std;
 template <class T>
 class List
 {
-    private:
+    protected:
 
     struct Node
     {
@@ -81,7 +81,10 @@ class List
     List() : mList(nullptr) {}
 
     // destructor 
-    ~List() {} 
+    ~List()
+    {
+        cout << "List destructor called!" << endl; 
+    } 
 
 
     bool isEmpty()
@@ -109,7 +112,10 @@ class List
         printListHelper(mList);
     }
 
-
+    Node* getNext()
+    {
+        return mList->mpNext();
+    }
 
 
 };

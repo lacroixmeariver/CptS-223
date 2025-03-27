@@ -1,0 +1,120 @@
+
+#ifndef _CONTAINER_ARRAY_
+#define _CONTAINER_ARRAY_
+using namespace std; 
+
+/*        !!TODO!!
+
+- still need copy assignment assignment operator and copy constructor 
+- double check cppreference for any functions that might be integral to this 
+- does this even work idk
+- turn this into an array otherwise it just gets too complicated 
+
+*/
+
+
+template <class T>
+class Array
+{
+
+    protected:
+
+    int capacity; // total amount this vector can hold 
+    int size; // the number of elements present 
+    T* data; // pointer to the first block of contiguous memory 
+
+    public:
+
+    //constructor
+    Array(int cap) : capacity(cap) 
+    {
+        size = 0;
+        try
+        {
+            data = new T[capacity]; // allocating space for T objects 
+            cout << "Memory allocated, capacity: " << capacity << endl;
+        }
+        catch(std::bad_alloc& error)
+        {
+            cout << "Memory failed to allocate for Vector_" << endl;
+        }
+        
+        // only allocating enough memory for the capacity upon creation
+    }
+ 
+
+    ~Array()
+    {
+        cout << "Vector destructor called!" << endl; // debug print
+        //delete[] data; // subscript operator in this case makes sure destructor is called for every T object 
+    }
+
+    void insertAtBack(T& newData)
+    { 
+        if (isEmpty()) // empty vector 
+        {
+            
+            size++; 
+            data[0] = newData;
+            //cout << "First element inserted" << endl;
+            return; 
+        }   
+    }
+
+    void deleteAtBack()
+    {
+        if (isEmpty())
+        {
+            cout << "Vector is empty, nothing to delete!" << endl;
+            return; 
+        } 
+        size--; 
+    }
+
+    // overloaded subscript operator for being able to access indexes (or is it indices?)
+    T &operator[](int index) 
+    {
+        return data[index]; 
+    }
+
+    T* clear()
+    {
+        cout << "Clearing data... " << endl; // debug print 
+        size = 0; 
+        delete[] data; 
+        data = new T[capacity]; 
+        return data;
+    
+    }
+    
+    // returns the number of elements stored in this vector 
+    int getSize()
+    {
+        return size; 
+    }
+   
+    bool isEmpty()
+    {
+        return (!size); 
+    }
+
+    T* begin()
+    {
+        return *data[0];
+    }
+
+    T* end()
+    {
+        return *data[size - 1]; 
+    }
+
+    void setCapacity(int cap)
+    {
+        capacity = cap; 
+    }
+
+
+
+};
+
+#endif

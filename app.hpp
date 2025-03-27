@@ -4,7 +4,7 @@
 
 #include <iostream>
 using namespace std;
-#include "Vector_.hpp"
+#include "Array.hpp"
 #include "Hashmap.hpp"
 #include "Product.hpp"
 #include "List_.hpp"
@@ -13,8 +13,8 @@ class App
 {
     public: 
 
-    Vector_<string> categories;
-    Vector_<Product> masterVector; 
+    Array<string> categories;
+    Array<Product> masterVector; 
 
     void extractData()
     {
@@ -30,8 +30,8 @@ class App
             
             getline(file, buffer, ',');
             bufferProd.uniqueID = buffer;  
-            getline(file, buffer, '"');
-            //buffer.erase(remove(buffer.begin(), buffer.end(), '"'), buffer.end()); // get rid of some errant single double quotes 
+            getline(file, buffer, ',');
+            buffer.erase(remove(buffer.begin(), buffer.end(), ' " '), buffer.end()); // get rid of some errant single double quotes 
             bufferProd.productName = buffer;
             getline(file, buffer, ',');
             bufferProd.brandName = buffer;
@@ -43,14 +43,15 @@ class App
             if (buffer == "")
             {
                 bufferProd.category = "N/A";
-
+                cout << "Category going in: " << bufferProd.category << endl;
             }
             else
             {
                 bufferProd.category = buffer;
+                cout << "Category going in: " << bufferProd.category << endl;
             }
 
-            cout << "Category going in: " << buffer << endl;
+            
             getline(file, buffer, ',');
             bufferProd.upcEanCode = buffer;
             getline(file, buffer, ',');
@@ -109,7 +110,7 @@ class App
    
     void extractCategories()
     {
-        Vector_<Product> parsingVector = masterVector; // copy of the master vector 
+        Array<Product> parsingVector = masterVector; // copy of the master vector 
         string buffer; 
          
         for (int i = 0; i < parsingVector.getSize(); i++)
