@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <iostream>
 using namespace std; 
 
 class Product
@@ -53,10 +54,11 @@ class Product
     // destructor
     ~Product(){};
 
-
-
-
-
+    friend ostream& operator<<(ostream& lhs, Product &rhs)
+    {
+        lhs << "Unique ID: " << rhs.uniqueID << "Name: " << rhs.productName << endl; 
+        return lhs;   
+    }
 
 };
 

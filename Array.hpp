@@ -12,60 +12,46 @@ using namespace std;
 
 */
 
-
 template <class T>
 class Array
 {
-
     protected:
 
-    int capacity; // total amount this vector can hold 
+    int capacity; // total amount this array can hold 
     int size; // the number of elements present 
     T* data; // pointer to the first block of contiguous memory 
 
     public:
 
     //constructor
-    Array(int cap) : capacity(cap) 
+    Array(int cap) 
     {
+        capacity = cap;
         size = 0;
         try
         {
             data = new T[capacity]; // allocating space for T objects 
-            cout << "Memory allocated, capacity: " << capacity << endl;
         }
         catch(std::bad_alloc& error)
         {
-            cout << "Memory failed to allocate for Vector_" << endl;
+            cout << "Memory failed to allocate for Array" << endl;
         }
-        
-        // only allocating enough memory for the capacity upon creation
     }
- 
+    Array() : size(0), capacity(0), data(nullptr) {}
 
-    ~Array()
-    {
-        cout << "Vector destructor called!" << endl; // debug print
-        //delete[] data; // subscript operator in this case makes sure destructor is called for every T object 
-    }
+    ~Array() {}
 
     void insertAtBack(T& newData)
     { 
-        if (isEmpty()) // empty vector 
-        {
-            
-            size++; 
-            data[0] = newData;
-            //cout << "First element inserted" << endl;
-            return; 
-        }   
+       data[size] = newData; 
+       size++;   
     }
 
     void deleteAtBack()
     {
         if (isEmpty())
         {
-            cout << "Vector is empty, nothing to delete!" << endl;
+            cout << "Array is empty, nothing to delete!" << endl;
             return; 
         } 
         size--; 
@@ -74,20 +60,19 @@ class Array
     // overloaded subscript operator for being able to access indexes (or is it indices?)
     T &operator[](int index) 
     {
-        return data[index]; 
+        return this->data[index]; 
     }
 
     T* clear()
     {
-        cout << "Clearing data... " << endl; // debug print 
+        //cout << "Clearing data... " << endl; // debug print 
         size = 0; 
         delete[] data; 
         data = new T[capacity]; 
         return data;
-    
     }
-    
-    // returns the number of elements stored in this vector 
+
+    // returns the number of elements stored in this array 
     int getSize()
     {
         return size; 
@@ -110,10 +95,21 @@ class Array
 
     void setCapacity(int cap)
     {
-        capacity = cap; 
+        data = new T[cap];
     }
 
+    Array& operator=(const Array& other)
+    {
+        capacity = other.capacity;
+        size = other.size;
+        data = new T[capacity];
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = other.data[i];
+        } 
 
+        return *this;
+    }
 
 };
 
