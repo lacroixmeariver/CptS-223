@@ -3,15 +3,6 @@
 #define _CONTAINER_ARRAY_
 using namespace std; 
 
-/*        !!TODO!!
-
-- still need copy assignment assignment operator and copy constructor 
-- double check cppreference for any functions that might be integral to this 
-- does this even work idk
-- turn this into an array otherwise it just gets too complicated 
-
-*/
-
 template <class T>
 class Array
 {
@@ -21,6 +12,7 @@ class Array
     int size; // the number of elements present 
     T* data; // pointer to the first block of contiguous memory 
 
+    // ******************************************* Public data functions start here *******************************************
     public:
 
     //constructor
@@ -28,33 +20,32 @@ class Array
     {
         capacity = cap;
         size = 0;
+        // try-catch block to catch any memory allocation errors 
         try
         {
             data = new T[capacity]; // allocating space for T objects 
         }
-        catch(std::bad_alloc& error)
+        catch(bad_alloc& error) 
         {
-            cout << "Memory failed to allocate for Array" << endl;
+            cout << "Memory failed to allocate for arrayContainer" << error.what() << endl;
         }
     }
-    Array() : size(0), capacity(0), data(nullptr) {}
 
-    ~Array() {}
+    // constructor 
+    Array()
+    {
+        size = 0;
+        capacity = 0; 
+        data = nullptr; 
+    } 
+
+    // default constructor 
+    ~Array(){}
 
     void insertAtBack(T& newData)
     { 
        data[size] = newData; 
        size++;   
-    }
-
-    void deleteAtBack()
-    {
-        if (isEmpty())
-        {
-            cout << "Array is empty, nothing to delete!" << endl;
-            return; 
-        } 
-        size--; 
     }
 
     // overloaded subscript operator for being able to access indexes (or is it indices?)
@@ -83,32 +74,9 @@ class Array
         return (!size); 
     }
 
-    T* begin()
-    {
-        return *data[0];
-    }
-
-    T* end()
-    {
-        return *data[size - 1]; 
-    }
-
     void setCapacity(int cap)
     {
         data = new T[cap];
-    }
-
-    Array& operator=(const Array& other)
-    {
-        capacity = other.capacity;
-        size = other.size;
-        data = new T[capacity];
-        for (int i = 0; i < size; i++)
-        {
-            data[i] = other.data[i];
-        } 
-
-        return *this;
     }
 
 };

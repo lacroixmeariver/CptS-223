@@ -1,7 +1,5 @@
 #ifndef _PRODUCT
 #define _PRODUCT
-
-
 #include <string>
 #include <iostream>
 using namespace std; 
@@ -56,7 +54,7 @@ class Product
 
     friend ostream& operator<<(ostream& lhs, Product &rhs)
     {
-        lhs << "Unique ID: " << rhs.uniqueID << "Name: " << rhs.productName << endl; 
+        lhs << "ID: [" << rhs.uniqueID << "], Product: [" << rhs.productName << "]" << endl; 
         return lhs;   
     }
 

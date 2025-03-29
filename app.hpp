@@ -2,117 +2,148 @@
 #ifndef _APP_
 #define _APP_
 #define MAX_DATA 10500
-
 #include <iostream>
 #include <fstream>
-using namespace std;
-#include "Array.hpp"
-#include "Hashmap.hpp"
+#include "arrayContainer.hpp"
+#include "hashmapContainer.hpp"
 #include "Product.hpp"
 #include <sstream>
+using namespace std;
+
 class App
 {
     protected: 
-    Array<string> categories;
-    Array<Product> masterArray; 
-    Hashmap<string, Product> categoryHash;
-    Hashmap<int, Product> idHash; 
 
-    public: 
-    App()
-    {
-        //categories = 0; 
-        masterArray = Array<Product>(MAX_DATA);
-        //categories = Array<string>(MAX_DATA); 
-        categoryHash = Hashmap<string, Product>(MAX_DATA); 
-        idHash = Hashmap<int, Product>(MAX_DATA);
-    }    
+    Array<string> categories; // array to hold all total categories 
+    Array<Product> fileInputArray; // buffer container, holds data taken from the input file before it gets place in hashmaps
+    Hashmap<string, Product> categoryHash; // hashmap of categories acting as each of the buckets
+    Hashmap<int, Product> idHash; // hashmap of IDs and Products 
 
     void sortData()
     {
         ifstream file("marketingData.csv");
-        ofstream outFile("cleanData.csv"); 
-        string buffer;
-        Array<string> bufferArray(100); 
-        Product bufferProd; 
+        string stringBuffer; 
+        Array<string> arrayBuffer(30); // each index holds one product detail 
+        Product productBuffer; // temporary object in order to place in the master array
         
-        getline(file, buffer); 
-        while (file)
+        getline(file, stringBuffer); 
+        while(getline(file, stringBuffer))
         {
-
-            getline(file, buffer);
-            bufferArray = parseLine(buffer); 
-            bufferArray.getSize();
+            // placing each line from the file into a buffer string 
+            getline(file, stringBuffer);
+            // parseLine() helps separate strings with wacky formatting 
+            arrayBuffer = parseLine(stringBuffer); 
          
-            bufferProd.uniqueID = bufferArray[0];  
-            bufferProd.productName = bufferArray[1];
-            bufferProd.brandName = bufferArray[2];
-            bufferProd.asin = bufferArray[3];
-            if (bufferArray[4] == "")
+            // big ugly chunk of Product member values being assigned 
+            productBuffer.uniqueID = arrayBuffer[0];  
+            productBuffer.productName = arrayBuffer[1];
+            productBuffer.brandName = arrayBuffer[2];
+            productBuffer.asin = arrayBuffer[3];
+            if (arrayBuffer[4] == "")
             {
-                bufferProd.category = "N/A";
+                productBuffer.category = "N/A";
             }
             else
             {
-                bufferProd.category = bufferArray[4];
+                productBuffer.category = arrayBuffer[4];
             }
-            bufferProd.upcEanCode = bufferArray[5];
-            bufferProd.listPrice = bufferArray[6];
-            bufferProd.sellingPrice = bufferArray[7];
-            bufferProd.quantity = bufferArray[8];
-            bufferProd.modelNumber = bufferArray[9];
-            bufferProd.description = bufferArray[10];
-            bufferProd.specifications = bufferArray[11];
-            bufferProd.techDetails = bufferArray[12];
-            bufferProd.shippingWeight = bufferArray[13];
-            bufferProd.productDimensions = bufferArray[14];
-            bufferProd.imageLink = bufferArray[15];
-            bufferProd.variants = bufferArray[16];
-            bufferProd.sku = bufferArray[17];
-            bufferProd.url = bufferArray[18];
-            bufferProd.stock = bufferArray[19];
-            bufferProd.details = bufferArray[20];
-            bufferProd.dimensions = bufferArray[21];
-            bufferProd.color = bufferArray[22];
-            bufferProd.ingredients = bufferArray[23];
-            bufferProd.directions = bufferArray[24];
-            bufferProd.amzSeller = bufferArray[25];
-            bufferProd.qVariant = bufferArray[26];
-            masterArray.insertAtBack(bufferProd);
+            productBuffer.upcEanCode = arrayBuffer[5];
+            productBuffer.listPrice = arrayBuffer[6];
+            productBuffer.sellingPrice = arrayBuffer[7];
+            productBuffer.quantity = arrayBuffer[8];
+            productBuffer.modelNumber = arrayBuffer[9];
+            productBuffer.description = arrayBuffer[10];
+            productBuffer.specifications = arrayBuffer[11];
+            productBuffer.techDetails = arrayBuffer[12];
+            productBuffer.shippingWeight = arrayBuffer[13];
+            productBuffer.productDimensions = arrayBuffer[14];
+            productBuffer.imageLink = arrayBuffer[15];
+            productBuffer.variants = arrayBuffer[16];
+            productBuffer.sku = arrayBuffer[17];
+            productBuffer.url = arrayBuffer[18];
+            productBuffer.stock = arrayBuffer[19];
+            productBuffer.details = arrayBuffer[20];
+            productBuffer.dimensions = arrayBuffer[21];
+            productBuffer.color = arrayBuffer[22];
+            productBuffer.ingredients = arrayBuffer[23];
+            productBuffer.directions = arrayBuffer[24];
+            productBuffer.amzSeller = arrayBuffer[25];
+            productBuffer.qVariant = arrayBuffer[26];
+            // inserting into the Product class array
+            fileInputArray.insertAtBack(productBuffer);
         }
 
         file.close();
     }
 
-    // populates hash map for individual categories 
-    void populateCategories()
+    // creates and populates hash map for individual categories 
+    void createCategoryHash()
     {
-        Array<Product> parsingArray = masterArray; // copy of the master vector 
-        string buffer;
-        for (int i = 0; i < masterArray.getSize(); i++)
+        Array<Product> parsingArray = fileInputArray; // copy of the main array holding all the data  
+        string stringBuffer;
+        for (int i = 0; i < fileInputArray.getSize(); i++)
         {
-            std::istringstream iss(parsingArray[i].category); // making a buffer string the input stream from the category index 
-            while (getline(iss, buffer, '|'))
+            std::istringstream iss(parsingArray[i].category); // making the buffer string the input stream from the category index to use getline()
+            while (getline(iss, stringBuffer, '|'))
             {
-                removeWhitespace(buffer); 
-                //cout << "Inserting: " << parsingArray[i] << " into: " << buffer << endl; 
-                categoryHash.insert(buffer, parsingArray[i]);
+                removeWhitespace(stringBuffer); // cleaning the leading and trailing whitespace after separating 
+                for (int i = 0; i < stringBuffer.size(); i++) // making sure input is standardize to eliminate the need for capitalization from user 
+                {
+                    stringBuffer[i] = tolower(stringBuffer[i]);
+                }
+                categoryHash.insert(stringBuffer, parsingArray[i]); 
             }
-            categoryHash.insert(buffer, parsingArray[i]);
         }
     }
-    
-    void populateIds()
+
+    // creates and populates the ID -> Unique ID hash 
+    void createIdHash() 
     {
-        Array<Product> parsingArray = masterArray; // copy of the master vector 
+        Array<Product> parsingArray = fileInputArray; // copy of the master vector 
         string buffer;
-        for (int i = 0; i < masterArray.getSize(); i++)
+        for (int i = 0; i < fileInputArray.getSize(); i++)
         {
-            //size_t index = idHash.hashFunction(parsingArray[i].uniqueID);
-            idHash.insert(i, parsingArray[i]); 
+            idHash.insert(i, parsingArray[i]); // i acts as the inventory ID
         }
     }
+
+    void findByCategory(const string query)
+    {
+        // each index in this hash is a type of container 
+        if (categoryHash.find(query))
+        {
+            categoryHash.displayByIndex(query); 
+        }
+        else
+        {
+            cout << "Invalid category" << endl; 
+        }
+    }
+
+    void findByID(int query)
+    {
+        if (idHash.find(query))
+        {
+            idHash.displayByIndex(query); 
+        }
+        else
+        {
+            cout << "Inventory/Product not found" << endl; 
+        }
+    }
+
+    // ******************************************* Public data functions start here *******************************************
+    public: 
+
+    // constructor 
+    App()
+    {
+        fileInputArray = Array<Product>(MAX_DATA);
+        categoryHash = Hashmap<string, Product>(MAX_DATA); 
+        idHash = Hashmap<int, Product>(MAX_DATA);
+    }    
  
+    // helper function to determine if something is a duplicate or not 
     bool isDuplicate(string str)
     {
         for (int i = 0; i < categories.getSize(); i++)
@@ -125,10 +156,11 @@ class App
         return false; 
     }
 
+    // helper function to remove leading and trailing whitespace
+    // returns a substring from the original
     string removeWhitespace(string &str)
     {
         size_t strBegin = 0, strEnd = str.size();
-        int i = 0; 
         while(strBegin < strEnd && str[strBegin] == ' ')
         {
             strBegin++;
@@ -141,9 +173,12 @@ class App
         return str; 
     }
 
+    // iterates through a string char by char and disregards commas depending on whether or not they're present between "" using a bool val 
+    // also accounts for instances of consecutive "" 
+    // returns array that collectively carries the information for 1 Product class object 
     Array<string> parseLine(string &line)
     {
-        Array<string> separatedFields(1001); 
+        Array<string> separatedFields(101); 
         string indvField; 
         bool inQuotes = false; 
         for (size_t i = 0; i < line.size(); i++)
@@ -160,12 +195,11 @@ class App
                 {
                     inQuotes = !inQuotes; // toggles depending on the presence of quotes 
                 }
-            
             }
             else if (lineChar == ',' && !inQuotes) // field is complete 
             {
-                separatedFields.insertAtBack(indvField);
-                indvField = "";
+                separatedFields.insertAtBack(indvField); // into the array it goes 
+                indvField = "\0"; // setting it back to  null char 
             }
             else 
             {
@@ -176,58 +210,44 @@ class App
         return separatedFields; 
     }
 
-    
-    void findByCategory(const string query)
-    {
-        categoryHash.printIndexList(query);
-    }
-
-    void findByID(int query)
-    {
-        idHash.find(query);
-        idHash.printIndexList(query); 
-    }
-
-    void printHelp()
-    {
-        cout << "Supported list of commands: " << endl;
-        cout << " 1. find <inventoryid> - Finds if the inventory exists. If exists, prints details. If not, prints 'Inventory not found'." << endl;
-        cout << " 2. listInventory <category_string> - Lists just the id and name of all inventory belonging to the specified category. If the category doesn't exists, prints 'Invalid Category'.\n"
-            << endl;
-    }
-
-    bool validCommand(string line)
-    {
-        return (line == ":help") ||
-            (line.rfind("find", 0) == 0) ||
-            (line.rfind("listInventory") == 0);
-    }
-
     void evalCommand(string line)
     {
         if (line == ":help")
         {
             printHelp();
         }
+    
         // if line starts with find
         else if (line.rfind("find", 0) == 0)
         {
-            // Look up the appropriate datastructure to find if the inventory exist
-            //cout << "YET TO IMPLEMENT!" << endl;
-            
+            createIdHash();
+            istringstream iss(line); // to be able to take input on the same line as command 
+            string command; 
+            int input;
+            iss >> command >> input; 
+            findByID(input);
         }
         // if line starts with listInventory
         else if (line.rfind("listInventory") == 0)
         {
-            // Look up the appropriate datastructure to find all inventory belonging to a specific category
-            //cout << "YET TO IMPLEMENT!" << endl;
-            populateCategories();
-            cout << "Enter category: " << endl;
-            string input; 
-            cin >> input; 
+            createCategoryHash();
+            istringstream iss(line);
+            string command, input; 
+            iss >> command;
+            getline(iss >> ws, input); // ws removes leading whitespace 
+            for (int i = 0; i < input.size(); i++)
+            {
+                input[i] = tolower(input[i]);
+            }
             findByCategory(input);
-            
         }
+    }
+
+    bool validCommand(string line)
+    {
+        return (line == ":help") ||
+        (line.rfind("find", 0) == 0) ||
+        (line.rfind("listInventory") == 0);
     }
 
     void bootStrap()
@@ -235,10 +255,16 @@ class App
         cout << "\n Welcome to Amazon Inventory Query System" << endl;
         cout << " enter :quit to exit. or :help to list supported commands." << endl;
         cout << "\n> ";
-
+        sortData();
     }
- 
 
+    void printHelp()
+    {
+        cout << "Supported list of commands: " << endl;
+        cout << " 1. find <inventoryid> - Finds if the inventory exists. If exists, prints details. If not, prints 'Inventory not found'." << endl;
+        cout << " 2. listInventory <category_string> - Lists just the id and name of all inventory belonging to the specified category. If the category doesn't exists, prints 'Invalid Category'.\n"
+        << endl;
+    }
+   
 };
-
 #endif
