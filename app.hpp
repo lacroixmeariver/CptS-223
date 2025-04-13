@@ -49,6 +49,7 @@ class App
             }
             productBuffer.upcEanCode = arrayBuffer[5];
             productBuffer.listPrice = arrayBuffer[6];
+            productBuffer.sellingPrice.erase(std::remove(productBuffer.sellingPrice.begin(), productBuffer.sellingPrice.end(), '$'), productBuffer.sellingPrice.end());
             productBuffer.sellingPrice = arrayBuffer[7];
             productBuffer.quantity = arrayBuffer[8];
             productBuffer.modelNumber = arrayBuffer[9];

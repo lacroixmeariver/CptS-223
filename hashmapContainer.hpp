@@ -98,6 +98,7 @@ class Hashmap
         }
     }
 
+
     size_t hashFunction(K keyVal)
     {
         return hash<K>()(keyVal) % capacity; 
@@ -142,7 +143,9 @@ class Hashmap
         return false; 
     }
 
-}; 
+};
+
+
 
 
 #endif
