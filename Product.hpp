@@ -58,8 +58,15 @@ class Product
         return lhs;   
     }
 
-};
 
+
+};
+	struct compareSellingPrice
+    {
+    	bool operator() (const Product& lhs, const Product& rhs)
+        {
+          return lhs.sellingPrice < rhs.sellingPrice;
+    }
 
 
 #endif

@@ -110,26 +110,31 @@ class App
 
     void findByCategory(const string query)
     {
-        // each index in this hash is a type of container 
-        if (categoryHash.find(query))
+      	auto result = categoryHash.findByIndex(query);
+        if(result == nullptr)
         {
-            categoryHash.displayByIndex(query); 
+          	cout << "No category found for: " << query << endl;
         }
         else
         {
-            cout << "Invalid category" << endl; 
+			while(result != nullptr)
+			{
+                cout << result->nodeData << endl;
+                result = result->mpNext;
+            }
         }
     }
 
     void findByID(int query)
     {
-        if (idHash.find(query))
-        {
-            idHash.displayByIndex(query); 
-        }
+		auto result = idHash.find(query);
+        if (result == nullptr)
+      	{
+        	cout << "No ID found for: " << query << endl;
+      	}
         else
         {
-            cout << "Inventory/Product not found" << endl; 
+        	cout << result->nodeData << endl;
         }
     }
 

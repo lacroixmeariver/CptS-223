@@ -104,27 +104,24 @@ class Hashmap
         return hash<K>()(keyVal) % capacity; 
     }
 
-    void displayByIndex(const K& key)
+    Node* findByIndex(const K& key) // returns pointer to the node (I hope)
     {
         size_t index = hashFunction(key);
         Node* tempNode = mapContainer[index];
         
         if (tempNode != nullptr) // if something does exist at this index 
         {
-            while(tempNode->mpNext != nullptr) // display everything in there 
-            {
-                cout << tempNode->nodeData << endl; 
-                tempNode = tempNode->mpNext; 
-            }
+         	return tempNode;
         }
         else 
         {
             //cout << "No existing entries for: " << key << endl;  
-            return; 
-        }      
+            return tempNode;
+        }
+        return tempNode;
     }
 
-    bool find(const K key)
+    Node* find(const K key)
     {
         size_t index = hashFunction(key);
         Node* searchField = mapContainer[index];
@@ -134,13 +131,12 @@ class Hashmap
             if (searchField->nodeKey == key)
             {
                 //cout << "Found!" << endl; 
-                cout << searchField->nodeData; 
-                return true;
+                return searchField;
             }
             searchField = searchField->mpNext; 
         }
        // cout << "Not found!" << endl; 
-        return false; 
+        return searchField;
     }
 
 };
