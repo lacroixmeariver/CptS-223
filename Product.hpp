@@ -15,9 +15,9 @@ public:
   std::string amzSeller;
 
   // constructor
-  Product(string newID = "", string newProdName = "", string newCategory = "",
-          double newSellingPrice = 0.0, string newAMZSeller = "",
-          string newProdDescription = "")
+  Product(std::string newID = "", std::string newProdName = "",
+          std::string newCategory = "", double newSellingPrice = 0.0,
+          std::string newAMZSeller = "", std::string newProdDescription = "")
       : uniqueID(newID), productName(newProdName), category(newCategory),
         sellingPrice(newSellingPrice), amzSeller(newAMZSeller),
         productDescription(newProdDescription) {}

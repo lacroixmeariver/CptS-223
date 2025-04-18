@@ -94,7 +94,7 @@ protected:
     auto result = categoryHash.findByIndex(query);
     Sorts<string, Product> sortingClass;
     Array<Hashmap<string, Product>::Node *> sortedArray =
-        sortingClass.insertionSort(result);
+      Sorts<string, Product>::insertionSort(result, descendingCompare<Product>);
 
     if (sortedArray.isEmpty()) {
       cout << "Nothing to see here..." << endl;
