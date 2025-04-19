@@ -45,7 +45,7 @@ protected:
       if (isValidNumber((arrayBuffer[3]))) {
         productBuffer.sellingPrice = stod(arrayBuffer[3]);
       } else {
-        productBuffer.sellingPrice = 0.0;
+        productBuffer.sellingPrice = -1.0;
       }
       productBuffer.productDescription = arrayBuffer[4];
       productBuffer.amzSeller = arrayBuffer[5];
@@ -70,11 +70,11 @@ protected:
       while (getline(iss, stringBuffer, '|')) {
         removeWhitespace(stringBuffer); // cleaning the leading and trailing
                                         // whitespace after separating
-        for (int i = 0; i < stringBuffer.size();
-             i++) // making sure input is standardize to eliminate the need for
+        for (int j = 0; j < stringBuffer.size();
+             j++) // making sure input is standardize to eliminate the need for
                   // capitalization from user
         {
-          stringBuffer[i] = tolower(stringBuffer[i]);
+          stringBuffer[j] = tolower(stringBuffer[j]);
         }
         categoryHash.insert(stringBuffer, parsingArray[i]);
       }
@@ -92,30 +92,32 @@ protected:
 
   void findByCategory(const string query) {
     auto result = categoryHash.findByIndex(query);
-    Sorts<string, Product> sortingClass;
-    Array<Hashmap<string, Product>::Node *> sortedArray =
-      Sorts<string, Product>::insertionSort(result, descendingCompare<Product>);
+    //Sorts<string, Product> sortingClass;
+    Array<Hashmap<string, Product>::Node *> sortedArray = // returns an array of all the sorted things in that category for printing
+      Sorts<string, Product>::mergeSort(Sorts<string, Product>::arrayify(result), descendingCompare<Product>);
+      //Sorts<string, Product>::insertionSort(result, descendingCompare<Product>);
 
-    if (sortedArray.isEmpty()) {
-      cout << "Nothing to see here..." << endl;
 
-    } else {
-      for (int i = 0; i < sortedArray.getSize(); i++) {
-        cout << sortedArray[i]->nodeData << endl;
-      }
-    }
-    //      if(result == nullptr)
-    //      {
-    //        	cout << "No category found for: " << query << endl;
-    //      }
-    //      else
-    //      {
-    // while(result != nullptr)
-    // {
-    //              cout << result->nodeData << endl;
-    //              result = result->mpNext;
-    //          }
-    //      }
+     if (sortedArray.isEmpty()) {
+       cout << "Nothing to see here..." << endl;
+
+     } else {
+       for (int i = 0; i < sortedArray.getSize(); i++) {
+         cout << sortedArray[i]->nodeData << endl;
+       }
+     }
+          if(result == nullptr)
+          {
+            	cout << "No category found for: " << query << endl;
+          }
+          else
+          {
+     while(result != nullptr)
+     {
+                  cout << result->nodeData << endl;
+                  result = result->mpNext;
+              }
+          }
   }
 
   void findByID(int query) {

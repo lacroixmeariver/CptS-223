@@ -29,7 +29,7 @@ public:
   static auto insertionSort(typename Hashmap<K, T>::Node *listHead,
   bool (*comparator)(T&, T&)){ // lambda function pointer
     // comparator function pointer -> function that compares 2 T type values
-    Array<typename Hashmap<K, T>::Node*> listArray = insertionSortHelper(listHead);
+    Array<typename Hashmap<K, T>::Node*> listArray = arrayify(listHead);
     for (int j = 1; j < listArray.getSize(); j++) {
       int k = j;
       while (k > 0 && comparator(listArray[k - 1]->nodeData, listArray[k]->nodeData)) {
@@ -42,7 +42,8 @@ public:
     return listArray;
   }
 
-  static Array<typename Hashmap<K, T>::Node *> insertionSortHelper(typename Hashmap<K, T>::Node * listHead) {
+  // helper function that takes a list and turns it into an array for easier swapping
+  static auto arrayify(typename Hashmap<K, T>::Node * listHead) {
     Array<typename Hashmap<K, T>::Node *> listArray(50);
     int i = 0;
     for (auto it = listHead; it != nullptr; it = it->mpNext) {
@@ -51,6 +52,49 @@ public:
     }
     return listArray;
   }
+
+  static auto mergeSort(Array<typename Hashmap<K, T>::Node *> listArray, bool (*comparator)(T&, T&)) {
+    if (listArray.getSize() <= 1) {
+      return listArray;
+    }
+    int mid = listArray.getSize() / 2;
+    auto leftArray = listArray.subArray(0, mid);
+    auto rightArray = listArray.subArray(mid, listArray.getSize());
+    return merge(mergeSort(leftArray, comparator), mergeSort(rightArray, comparator), comparator);
+  }
+
+  // static auto mergeSortHelper(typename Hashmap<K, T>::Node* listHead,  bool (*comparator)(T&, T&)) {
+  //   auto listArray = arrayify(listHead);
+  //   mergeSort(listArray, comparator);
+  // }
+
+  static auto merge(Array<typename Hashmap<K, T>::Node *> leftArray, Array<typename Hashmap<K, T>::Node *> rightArray, bool (*comparator)(T&, T&)) {
+    Array<typename Hashmap<K, T>::Node *> sortedArray(50);
+    int i = 0, j = 0;
+    while (i < leftArray.getSize() && j < rightArray.getSize()) {
+      if (comparator(leftArray[i]->nodeData, rightArray[j]->nodeData)) {
+        sortedArray.insertAtBack(leftArray[i]);
+        i++;
+      }
+      else {
+        sortedArray.insertAtBack(rightArray[j]);
+        j++;
+      }
+    }
+    if (i > j) {
+      for (; j < rightArray.getSize(); j++) {
+        sortedArray.insertAtBack(rightArray[j]);
+      }
+
+    }
+    else {
+      for (; i < leftArray.getSize(); i++) {
+        sortedArray.insertAtBack(leftArray[i]);
+      }
+    }
+    return sortedArray;
+  }
+  
 
 };
 

@@ -14,12 +14,20 @@ public:
     Node *mpNext;
     Node(K newKey, T newData)
         : nodeKey(newKey), nodeData(newData), mpNext(nullptr) {};
-    Node() {};
+    Node(): mpNext(nullptr) {};
+    Node& operator=(Node newNode) {
+       nodeKey = newNode.nodeKey;
+       nodeData = newNode.nodeData;
+       mpNext = newNode.mpNext;
+       return *this;
+    }
+
   };
 
   int capacity;
   int size;
-  Array<Node *> mapContainer; // all values stored in here
+  Array<Node*> mapContainer; // all values stored in here
+
 
   double loadFactor() {
     // cast so integer division doesn't ruin anyone's day

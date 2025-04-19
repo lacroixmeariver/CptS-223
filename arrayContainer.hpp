@@ -1,6 +1,7 @@
 
 #ifndef _CONTAINER_ARRAY_
 #define _CONTAINER_ARRAY_
+//#include "hashmapContainer.hpp"
 using namespace std;
 
 template <class T> class Array {
@@ -35,7 +36,7 @@ public:
   // default constructor
   ~Array() {}
 
-  void insertAtBack(T &newData) {
+  void insertAtBack(const T &newData) {
     data[size] = newData;
     size++;
   }
@@ -58,6 +59,32 @@ public:
   bool isEmpty() { return (!size); }
 
   void setCapacity(int cap) { data = new T[cap]; }
+
+  //returns new array
+
+
+  auto subArray(int start, int end) {
+    Array result(end - start);
+    for (int i = start; i < end; i++) {
+      result[i-start] = data[i];
+      result.size += 1;
+    }
+    return result;
+  }
+  //template <class K, class T>
+  // auto& operator=(const Array<T> &rhs) {
+  //   if (this != &rhs) {
+  //     delete[] data;
+  //     data = new T[rhs.capacity];
+  //     size = rhs.size;
+  //     capacity = rhs.capacity;
+  //     for (int i = 0; i < size; i++) {
+  //       data[i] = rhs.data[i];
+  //     }
+  //   }
+  //   return *this;
+  // }
+
 };
 
 #endif
