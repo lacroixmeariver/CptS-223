@@ -94,7 +94,7 @@ protected:
     auto result = categoryHash.findByIndex(query);
     //Sorts<string, Product> sortingClass;
     Array<Hashmap<string, Product>::Node *> sortedArray = // returns an array of all the sorted things in that category for printing
-      Sorts<string, Product>::mergeSort(Sorts<string, Product>::arrayify(result), descendingCompare<Product>);
+      Sorts<string, Product>::mergeSort(Sorts<string, Product>::arrayify(result), ascendingCompare<Product>);
       //Sorts<string, Product>::insertionSort(result, descendingCompare<Product>);
 
 
@@ -112,12 +112,13 @@ protected:
           }
           else
           {
-     while(result != nullptr)
-     {
-                  cout << result->nodeData << endl;
-                  result = result->mpNext;
-              }
-          }
+     // while(result != nullptr)
+     // {
+     //              cout << result->nodeData << endl;
+     //              result = result->mpNext;
+     //          }
+
+           }
   }
 
   void findByID(int query) {

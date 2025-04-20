@@ -27,7 +27,7 @@ class Sorts {
 
 public:
   static auto insertionSort(typename Hashmap<K, T>::Node *listHead,
-  bool (*comparator)(T&, T&)){ // lambda function pointer
+  bool (*comparator)(const T&, const T&)){ // lambda function pointer
     // comparator function pointer -> function that compares 2 T type values
     Array<typename Hashmap<K, T>::Node*> listArray = arrayify(listHead);
     for (int j = 1; j < listArray.getSize(); j++) {
@@ -53,7 +53,7 @@ public:
     return listArray;
   }
 
-  static auto mergeSort(Array<typename Hashmap<K, T>::Node *> listArray, bool (*comparator)(T&, T&)) {
+  static auto mergeSort(Array<typename Hashmap<K, T>::Node *> listArray, bool (*comparator)(const T&, const T&)) {
     if (listArray.getSize() <= 1) {
       return listArray;
     }
@@ -63,35 +63,33 @@ public:
     return merge(mergeSort(leftArray, comparator), mergeSort(rightArray, comparator), comparator);
   }
 
-  // static auto mergeSortHelper(typename Hashmap<K, T>::Node* listHead,  bool (*comparator)(T&, T&)) {
-  //   auto listArray = arrayify(listHead);
-  //   mergeSort(listArray, comparator);
-  // }
 
-  static auto merge(Array<typename Hashmap<K, T>::Node *> leftArray, Array<typename Hashmap<K, T>::Node *> rightArray, bool (*comparator)(T&, T&)) {
+  static auto merge(Array<typename Hashmap<K, T>::Node *> leftArray, Array<typename Hashmap<K, T>::Node *> rightArray, bool (*comparator)(const T&, const T&)) {
     Array<typename Hashmap<K, T>::Node *> sortedArray(50);
     int i = 0, j = 0;
     while (i < leftArray.getSize() && j < rightArray.getSize()) {
       if (comparator(leftArray[i]->nodeData, rightArray[j]->nodeData)) {
-        sortedArray.insertAtBack(leftArray[i]);
-        i++;
-      }
-      else {
         sortedArray.insertAtBack(rightArray[j]);
         j++;
-      }
-    }
-    if (i > j) {
-      for (; j < rightArray.getSize(); j++) {
-        sortedArray.insertAtBack(rightArray[j]);
-      }
 
-    }
-    else {
-      for (; i < leftArray.getSize(); i++) {
+      }
+      else {
         sortedArray.insertAtBack(leftArray[i]);
+        //rightArray.deleteAtFront();
+        i++;
       }
     }
+   if (i > j && leftArray[i] != nullptr) {
+     for (int k = i; k < leftArray.getSize(); k++) {
+       sortedArray.insertAtBack(leftArray[k]);
+     }
+   }
+   else {
+     for (int k = j; k < rightArray.getSize(); k++) {
+       sortedArray.insertAtBack(rightArray[k]);
+      }
+    }
+
     return sortedArray;
   }
   
@@ -100,12 +98,12 @@ public:
 
 // one of the functions below is chosen depending on the one called in app class
 template<class T>
-bool descendingCompare(T& x, T& y) {
+bool descendingCompare(const T& x, const T& y) {
   return x < y;
 }
 
 template<class T>
-bool ascendingCompare(T& x, T& y) {
+bool ascendingCompare(const T& x, const T& y) {
   return x > y;
 }
 

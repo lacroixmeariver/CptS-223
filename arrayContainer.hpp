@@ -53,6 +53,13 @@ public:
     return data;
   }
 
+  void deleteAtFront() {
+    for (int i = 1; i < size; i++) {
+      data[i - 1] = data[i];
+    }
+    size -= 1;
+  }
+
   // returns the number of elements stored in this array
   int getSize() { return size; }
 
