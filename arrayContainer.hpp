@@ -1,7 +1,5 @@
-
-#ifndef _CONTAINER_ARRAY_
-#define _CONTAINER_ARRAY_
-//#include "hashmapContainer.hpp"
+#ifndef CONTAINER_ARRAY_
+#define CONTAINER_ARRAY_
 using namespace std;
 
 template <class T> class Array {
@@ -10,8 +8,7 @@ protected:
   int size;     // the number of elements present
   T *data;      // pointer to the first block of contiguous memory
 
-  // ******************************************* Public data functions start
-  // here *******************************************
+  // ******************************************* Public data functions start here *******************************************
 public:
   // constructor
   Array(int cap) {
@@ -33,7 +30,7 @@ public:
     data = nullptr;
   }
 
-  // default constructor
+  // default destructor
   ~Array() {}
 
   void insertAtBack(const T &newData) {
@@ -53,13 +50,6 @@ public:
     return data;
   }
 
-  void deleteAtFront() {
-    for (int i = 1; i < size; i++) {
-      data[i - 1] = data[i];
-    }
-    size -= 1;
-  }
-
   // returns the number of elements stored in this array
   int getSize() { return size; }
 
@@ -67,30 +57,15 @@ public:
 
   void setCapacity(int cap) { data = new T[cap]; }
 
-  //returns new array
-
-
+  // returns partitioned array
   auto subArray(int start, int end) {
     Array result(end - start);
     for (int i = start; i < end; i++) {
-      result[i-start] = data[i];
+      result[i - start] = data[i];
       result.size += 1;
     }
     return result;
   }
-  //template <class K, class T>
-  // auto& operator=(const Array<T> &rhs) {
-  //   if (this != &rhs) {
-  //     delete[] data;
-  //     data = new T[rhs.capacity];
-  //     size = rhs.size;
-  //     capacity = rhs.capacity;
-  //     for (int i = 0; i < size; i++) {
-  //       data[i] = rhs.data[i];
-  //     }
-  //   }
-  //   return *this;
-  // }
 
 };
 

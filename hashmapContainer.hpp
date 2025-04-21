@@ -1,9 +1,7 @@
-#ifndef _HASHMAP_
-#define _HASHMAP_
+#ifndef HASHMAP_
+#define HASHMAP_
 #include "arrayContainer.hpp"
 #include <iostream>
-
-// using namespace std;
 
 template <class K, class T> class Hashmap {
 public:
@@ -12,22 +10,23 @@ public:
     K nodeKey;
     T nodeData;
     Node *mpNext;
+
     Node(K newKey, T newData)
         : nodeKey(newKey), nodeData(newData), mpNext(nullptr) {};
-    Node(): mpNext(nullptr) {};
-    Node& operator=(Node newNode) {
-       nodeKey = newNode.nodeKey;
-       nodeData = newNode.nodeData;
-       mpNext = newNode.mpNext;
-       return *this;
-    }
 
+    Node() : mpNext(nullptr) {};
+
+    Node &operator=(Node newNode) {
+      nodeKey = newNode.nodeKey;
+      nodeData = newNode.nodeData;
+      mpNext = newNode.mpNext;
+      return *this;
+    }
   };
 
   int capacity;
   int size;
-  Array<Node*> mapContainer; // all values stored in here
-
+  Array<Node *> mapContainer; // all values stored in here
 
   double loadFactor() {
     // cast so integer division doesn't ruin anyone's day
@@ -52,9 +51,6 @@ public:
     }
   }
 
-  // ******************************************* Public data functions start
-  // here *******************************************
-public:
   // constructor
   Hashmap(int initialCapacity) {
     capacity = initialCapacity;
@@ -73,8 +69,8 @@ public:
   void insert(K keyVal, T dataVal) {
     size_t index = hashFunction(keyVal);
     Node *current = mapContainer[index]; // keeping track of current node for
-                                         // separate chaining
-    if (current == nullptr)              // empty
+    // separate chaining
+    if (current == nullptr) // empty
     {
       mapContainer[index] = new Node(keyVal, dataVal);
       size++;
@@ -82,7 +78,7 @@ public:
     }
     if (current != nullptr &&
         loadFactor() < 0.5) // if there's something in the same index but
-                            // there's room for it in the map
+    // there's room for it in the map
     {
       while (current != nullptr) {
         if (current->mpNext == nullptr) // if the next node is available
@@ -93,7 +89,6 @@ public:
         }
         current = current->mpNext; // traversing
       }
-
     } else if (loadFactor() > 0.5) {
       rehash();
     }
